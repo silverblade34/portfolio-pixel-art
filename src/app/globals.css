@@ -8,132 +8,124 @@
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden; /* No scroll, single view */
-  background-color: #111;
-  /* Pixel art background tile if needed, but we'll set it in page.tsx */
+  background-color: #030508; /* Super dark, almost black background */
+  color: #a8b8c8;
 }
 
-/* ── Authentic RPG UI Panel ──────────────────────────────────── */
-.rpg-panel {
-  background: rgba(14, 20, 28, 0.9); /* Deep dark blue/grey */
-  border: 2px solid #8294a6; /* Metallic border */
-  box-shadow: 
-    inset 0 0 0 1px #151e2b,
-    inset 0 0 15px rgba(0,0,0,0.8),
-    2px 2px 4px rgba(0,0,0,0.8);
+/* ── Cyber RPG Panel ─────────────────────────────────────────── */
+.cyber-panel {
+  background: rgba(10, 15, 24, 0.7); /* Deep dark blue */
+  border: 1px solid #1a2b3c;
   border-radius: 4px;
   position: relative;
-  z-index: 10;
 }
 
-/* Gold border variant for emphasis */
-.rpg-panel-gold {
-  background: rgba(14, 20, 28, 0.9);
-  border: 2px solid #d4b483;
-  box-shadow: 
-    inset 0 0 0 1px #2a1f10,
-    inset 0 0 15px rgba(0,0,0,0.8),
-    2px 2px 4px rgba(0,0,0,0.8);
-  border-radius: 4px;
+/* Panel Header line */
+.cyber-panel-header {
+  border-bottom: 1px solid #1a2b3c;
+  background: rgba(20, 30, 45, 0.5);
+  padding: 6px 12px;
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: #c0d0e0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* ── Typography and Spacing Utilities ────────────────────────── */
-.text-gold { color: #f2cc79; }
-.text-silver { color: #a8b8c8; }
-.text-white-shadow { text-shadow: 1px 1px 0 #000; }
-.text-gold-shadow { text-shadow: 1px 1px 0 #000; color: #f2cc79; }
+/* ── Typography Utilities ────────────────────────────────────── */
+.text-cyber-blue { color: #4488ff; }
+.text-cyber-green { color: #44ff44; }
+.text-cyber-gold { color: #ffd700; }
+.text-cyber-gray { color: #8294a6; }
 
-/* ── Status Bars ─────────────────────────────────────────────── */
-.rpg-bar-track {
-  background: #0d131a;
-  border: 1px solid #334455;
-  height: 8px;
-  width: 100%;
+/* Glowing text */
+.glow-text {
+  text-shadow: 0 0 10px rgba(68, 136, 255, 0.5);
 }
-.rpg-bar-xp { background: linear-gradient(90deg, #b8860b, #ffd700); }
-.rpg-bar-hp { background: linear-gradient(90deg, #8b0000, #ff4444); }
-.rpg-bar-mp { background: linear-gradient(90deg, #00008b, #4488ff); }
 
-/* ── Buttons ─────────────────────────────────────────────────── */
-.rpg-btn-gold {
-  background: linear-gradient(180deg, #a67c00 0%, #735600 100%);
-  border: 1px solid #e5b800;
+/* ── Buttons and Interactions ────────────────────────────────── */
+.cyber-btn-blue {
+  background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+  border: 1px solid #3b82f6;
   color: #fff;
-  font-family: var(--font-press-start);
-  font-size: 8px;
-  text-transform: uppercase;
-  padding: 8px 16px;
+  font-family: var(--font-pixel);
+  padding: 6px 16px;
+  border-radius: 2px;
   cursor: pointer;
-  box-shadow: 1px 1px 0 #000;
+  transition: all 0.2s;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
-.rpg-btn-gold:hover { background: linear-gradient(180deg, #bf8f00 0%, #8c6900 100%); }
+.cyber-btn-blue:hover {
+  background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
 
-.rpg-btn-dark {
-  background: linear-gradient(180deg, #2a3545 0%, #151e2b 100%);
-  border: 1px solid #5a6e85;
-  color: #a8b8c8;
-  font-family: var(--font-press-start);
-  font-size: 8px;
-  text-transform: uppercase;
-  padding: 8px 16px;
+.cyber-btn-dark {
+  background: transparent;
+  border: 1px solid #1a2b3c;
+  color: #c0d0e0;
+  font-family: var(--font-pixel);
+  padding: 6px 16px;
+  border-radius: 2px;
   cursor: pointer;
-  box-shadow: 1px 1px 0 #000;
+  transition: all 0.2s;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
-.rpg-btn-dark:hover { color: #fff; border-color: #8294a6; }
+.cyber-btn-dark:hover {
+  border-color: #3b82f6;
+  color: #fff;
+  background: rgba(59, 130, 246, 0.1);
+}
 
-/* ── Left Menu Items ─────────────────────────────────────────── */
-.left-menu-item {
+/* ── Left Sidebar Menu ───────────────────────────────────────── */
+.cyber-menu-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   cursor: pointer;
-  font-family: var(--font-press-start);
-  font-size: 9px;
+  font-family: var(--font-pixel);
+  font-size: 16px;
   color: #a8b8c8;
-  border-bottom: 1px solid rgba(90, 110, 133, 0.2);
+  border-radius: 4px;
+  transition: all 0.2s;
 }
-.left-menu-item:hover, .left-menu-item.active {
-  background: rgba(42, 53, 69, 0.5);
+.cyber-menu-item:hover {
+  background: rgba(26, 43, 60, 0.5);
   color: #fff;
 }
-.left-menu-item.active::before {
-  content: "▶";
-  position: absolute;
-  left: 6px;
+.cyber-menu-item.active {
+  background: linear-gradient(90deg, rgba(30, 58, 138, 0.8) 0%, rgba(30, 58, 138, 0) 100%);
+  border-left: 2px solid #3b82f6;
   color: #fff;
-  font-size: 8px;
 }
 
-/* ── Skill Pip Bars ──────────────────────────────────────────── */
-.skill-pip-track {
-  display: flex;
-  gap: 2px;
+/* ── Progress Bars ───────────────────────────────────────────── */
+.cyber-bar-track {
+  background: #05080f;
+  border: 1px solid #1a2b3c;
+  height: 6px;
+  width: 100%;
+  border-radius: 1px;
+  overflow: hidden;
 }
-.skill-pip {
-  width: 8px;
-  height: 8px;
-  background: #1a2533;
-  border: 1px solid #334455;
-}
-.skill-pip.filled.gold { background: #ffd700; border-color: #a67c00; }
-.skill-pip.filled.blue { background: #4488ff; border-color: #00008b; }
-.skill-pip.filled.green { background: #44ff44; border-color: #006400; }
-.skill-pip.filled.orange { background: #ff8c00; border-color: #8b4500; }
-
-/* ── Projects Cards ──────────────────────────────────────────── */
-.hud-project-card {
-  border: 1px solid #334455;
-  background: rgba(20, 30, 45, 0.6);
-  border-radius: 2px;
-  transition: border-color 0.2s;
-}
-.hud-project-card:hover {
-  border-color: #8294a6;
-  background: rgba(30, 45, 65, 0.6);
+.cyber-bar-fill {
+  background: #3b82f6;
+  height: 100%;
+  box-shadow: 0 0 5px #3b82f6;
 }
 
-/* ── CRT Scanline Overlay ────────────────────────────────────── */
+/* ── Terminal / CRT Overlay ──────────────────────────────────── */
 .crt-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -141,26 +133,25 @@ body {
     to bottom,
     transparent 0px,
     transparent 2px,
-    rgba(0,0,0,0.15) 2px,
-    rgba(0,0,0,0.15) 4px
+    rgba(0,0,0,0.05) 2px,
+    rgba(0,0,0,0.05) 4px
   );
   pointer-events: none;
   z-index: 9999;
 }
 
-/* ── Custom Scrollbar for RPG Panels ─────────────────────────── */
+/* ── Custom Scrollbar ────────────────────────────────────────── */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #0d131a;
-  border-left: 1px solid #334455;
+  background: #05080f;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #334455;
-  border: 1px solid #5a6e85;
+  background: #1a2b3c;
+  border-radius: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #5a6e85;
+  background: #2a3b4c;
 }
 
