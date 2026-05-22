@@ -1,26 +1,166 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --font-pixel: var(--font-vt323), monospace;
+  --font-display: var(--font-press-start), monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* No scroll, single view */
+  background-color: #111;
+  /* Pixel art background tile if needed, but we'll set it in page.tsx */
 }
+
+/* ── Authentic RPG UI Panel ──────────────────────────────────── */
+.rpg-panel {
+  background: rgba(14, 20, 28, 0.9); /* Deep dark blue/grey */
+  border: 2px solid #8294a6; /* Metallic border */
+  box-shadow: 
+    inset 0 0 0 1px #151e2b,
+    inset 0 0 15px rgba(0,0,0,0.8),
+    2px 2px 4px rgba(0,0,0,0.8);
+  border-radius: 4px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Gold border variant for emphasis */
+.rpg-panel-gold {
+  background: rgba(14, 20, 28, 0.9);
+  border: 2px solid #d4b483;
+  box-shadow: 
+    inset 0 0 0 1px #2a1f10,
+    inset 0 0 15px rgba(0,0,0,0.8),
+    2px 2px 4px rgba(0,0,0,0.8);
+  border-radius: 4px;
+}
+
+/* ── Typography and Spacing Utilities ────────────────────────── */
+.text-gold { color: #f2cc79; }
+.text-silver { color: #a8b8c8; }
+.text-white-shadow { text-shadow: 1px 1px 0 #000; }
+.text-gold-shadow { text-shadow: 1px 1px 0 #000; color: #f2cc79; }
+
+/* ── Status Bars ─────────────────────────────────────────────── */
+.rpg-bar-track {
+  background: #0d131a;
+  border: 1px solid #334455;
+  height: 8px;
+  width: 100%;
+}
+.rpg-bar-xp { background: linear-gradient(90deg, #b8860b, #ffd700); }
+.rpg-bar-hp { background: linear-gradient(90deg, #8b0000, #ff4444); }
+.rpg-bar-mp { background: linear-gradient(90deg, #00008b, #4488ff); }
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+.rpg-btn-gold {
+  background: linear-gradient(180deg, #a67c00 0%, #735600 100%);
+  border: 1px solid #e5b800;
+  color: #fff;
+  font-family: var(--font-press-start);
+  font-size: 8px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 1px 1px 0 #000;
+}
+.rpg-btn-gold:hover { background: linear-gradient(180deg, #bf8f00 0%, #8c6900 100%); }
+
+.rpg-btn-dark {
+  background: linear-gradient(180deg, #2a3545 0%, #151e2b 100%);
+  border: 1px solid #5a6e85;
+  color: #a8b8c8;
+  font-family: var(--font-press-start);
+  font-size: 8px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 1px 1px 0 #000;
+}
+.rpg-btn-dark:hover { color: #fff; border-color: #8294a6; }
+
+/* ── Left Menu Items ─────────────────────────────────────────── */
+.left-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-family: var(--font-press-start);
+  font-size: 9px;
+  color: #a8b8c8;
+  border-bottom: 1px solid rgba(90, 110, 133, 0.2);
+}
+.left-menu-item:hover, .left-menu-item.active {
+  background: rgba(42, 53, 69, 0.5);
+  color: #fff;
+}
+.left-menu-item.active::before {
+  content: "▶";
+  position: absolute;
+  left: 6px;
+  color: #fff;
+  font-size: 8px;
+}
+
+/* ── Skill Pip Bars ──────────────────────────────────────────── */
+.skill-pip-track {
+  display: flex;
+  gap: 2px;
+}
+.skill-pip {
+  width: 8px;
+  height: 8px;
+  background: #1a2533;
+  border: 1px solid #334455;
+}
+.skill-pip.filled.gold { background: #ffd700; border-color: #a67c00; }
+.skill-pip.filled.blue { background: #4488ff; border-color: #00008b; }
+.skill-pip.filled.green { background: #44ff44; border-color: #006400; }
+.skill-pip.filled.orange { background: #ff8c00; border-color: #8b4500; }
+
+/* ── Projects Cards ──────────────────────────────────────────── */
+.hud-project-card {
+  border: 1px solid #334455;
+  background: rgba(20, 30, 45, 0.6);
+  border-radius: 2px;
+  transition: border-color 0.2s;
+}
+.hud-project-card:hover {
+  border-color: #8294a6;
+  background: rgba(30, 45, 65, 0.6);
+}
+
+/* ── CRT Scanline Overlay ────────────────────────────────────── */
+.crt-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Custom Scrollbar for RPG Panels ─────────────────────────── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #0d131a;
+  border-left: 1px solid #334455;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #334455;
+  border: 1px solid #5a6e85;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5a6e85;
+}
+
