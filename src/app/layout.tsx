@@ -15,8 +15,9 @@ const vt323 = VT323({
 });
 
 export const metadata: Metadata = {
-  title: "Marcos Pacheco | Portfolio",
-  description: "Portafolio de Marcos Pacheco, Full Stack Developer.",
+  title: "Marcos Pacheco | Full Stack Engineer",
+  description:
+    "Portafolio de Marcos Pacheco — Full Stack Developer especializado en arquitecturas backend escalables, microservicios y soluciones cloud sobre AWS.",
 };
 
 export default function RootLayout({
@@ -27,11 +28,13 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${pressStart2P.variable} ${vt323.variable} h-full`}
+      className={`${pressStart2P.variable} ${vt323.variable}`}
+      style={{ height: '100%', overflow: 'hidden' }}
     >
-      <body className="min-h-full bg-black overflow-x-hidden">
+      <body style={{ height: '100%', margin: 0, padding: 0, overflow: 'hidden' }}>
         {children}
       </body>
     </html>
   );
 }
+

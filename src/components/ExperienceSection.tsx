@@ -99,7 +99,7 @@ export function ExperienceSection() {
                 </div>
               </div>
 
-              <button 
+              <button
                 onClick={() => setActiveDialogue(activeDialogue === index ? null : index)}
                 className="pixel-btn mt-4 text-xs"
               >
@@ -114,7 +114,7 @@ export function ExperienceSection() {
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="mt-6 pixel-box p-6 relative"
                   >
-                    <button 
+                    <button
                       onClick={() => setActiveDialogue(null)}
                       className="absolute top-2 right-4 text-white font-display text-xl hover:text-red-500"
                     >
@@ -122,7 +122,7 @@ export function ExperienceSection() {
                     </button>
                     <div className="flex gap-4">
                       <div className="hidden sm:block w-16 h-16 bg-black border-2 border-white shrink-0 relative overflow-hidden">
-                        <img src="/perfil-modo-videojuego.png" alt="Avatar" className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] max-w-none object-cover" style={{ objectPosition: 'center 10%' }}/>
+                        <img src="/assets/card-presentacion-personaje.png" alt="Avatar" className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] max-w-none object-cover" style={{ objectPosition: 'center 10%' }} />
                       </div>
                       <p className="font-pixel text-xl leading-relaxed">
                         {displayedText}

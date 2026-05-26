@@ -7,7 +7,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-24 pb-12 px-6 lg:px-12 overflow-hidden bg-checkerboard">
       <div className="z-10 max-w-6xl w-full mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-16">
-        
+
         {/* Left Side - Avatar */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -20,13 +20,13 @@ export function HeroSection() {
             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
             className="w-full h-full relative"
           >
-            <Image 
-              src="/perfil-modo-videojuego.png" 
-              alt="Marcos Pacheco Avatar" 
-              fill 
+            <Image
+              src="/assets/card-presentacion-personaje.png"
+              alt="Marcos Pacheco Avatar"
+              fill
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-contain"
-              priority 
+              priority
             />
           </motion.div>
         </motion.div>
@@ -40,7 +40,7 @@ export function HeroSection() {
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display text-white mb-6 tracking-widest drop-shadow-[4px_4px_0_#0000aa] leading-tight">
             MARCOS
-            <br /> 
+            <br />
             PACHECO
           </h1>
 
@@ -49,12 +49,12 @@ export function HeroSection() {
               LVL 99 Full Stack Developer
             </h2>
           </div>
-          
+
           <p className="text-gray-300 font-pixel text-lg md:text-xl leading-relaxed mb-12 max-w-xl">
             Especializado en arquitecturas backend escalables, microservicios y soluciones cloud sobre AWS. Construyendo experiencias web de alto rendimiento.
           </p>
 
-          <motion.div 
+          <motion.div
             className="flex flex-col sm:flex-row gap-6 justify-center md:justify-start w-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -63,7 +63,7 @@ export function HeroSection() {
             <a href="#projects" className="pixel-btn px-8 py-4 text-sm flex items-center justify-center gap-2 w-full sm:w-auto">
               ▶ Iniciar Partida
             </a>
-            
+
             <a href="#experience" className="pixel-btn px-8 py-4 text-sm text-center w-full sm:w-auto" style={{ backgroundColor: '#111', color: '#fff' }}>
               ⚙ Cargar Datos
             </a>

@@ -1,392 +1,796 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { portfolioData } from './data';
+import { portfolioData, type Project } from './data';
 
 type TabName = 'INICIO' | 'SOBRE MÍ' | 'HABILIDADES' | 'PROYECTOS' | 'EXPERIENCIA' | 'CONTACTO';
+type FilterTag = 'TODOS' | 'WEB APPS' | 'HERRAMIENTAS' | 'IOT/CLOUD' | 'DISEÑO';
 
-export default function StaticHUDPortfolio() {
-  const [activeTab, setActiveTab] = useState<TabName>('INICIO');
+const menuItems: { tab: TabName; icon: string }[] = [
+  { tab: 'INICIO', icon: '🏠' },
+  { tab: 'PROYECTOS', icon: '🗂️' },
+  { tab: 'EXPERIENCIA', icon: '📜' },
+  { tab: 'HABILIDADES', icon: '⚡' },
+  { tab: 'SOBRE MÍ', icon: '👤' },
+  { tab: 'CONTACTO', icon: '✉️' },
+];
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'INICIO':
-        return (
-          <>
-            {/* Center Top: Welcome Panel */}
-            <div className="rpg-panel flex-1 relative overflow-hidden group">
-              <div className="absolute inset-0">
-                <Image src="/assets/personaje-caminando-castillo.png" alt="Landscape" fill sizes="100vw" className="object-cover object-bottom" priority />
-              </div>
-              {/* Dark gradient overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f19]/90 via-[#0a0f19]/70 to-transparent" />
-              
-              <div className="relative z-10 p-8 h-full flex flex-col justify-center max-w-lg">
-                <h1 className="font-display text-[22px] leading-relaxed text-white-shadow mb-6">
-                  ¡BIENVENIDO A<br/>MI PORTAFOLIO!
-                </h1>
-                <p className="text-sm text-silver text-white-shadow leading-relaxed mb-8">
-                  {portfolioData.profile.split('\n')[0]}
-                </p>
-                <div className="flex gap-4">
-                  <button onClick={() => setActiveTab('PROYECTOS')} className="rpg-btn-gold">VER PROYECTOS ❯</button>
-                  <a href="#" className="rpg-btn-dark inline-flex items-center">DESCARGAR CV 📥</a>
-                </div>
-              </div>
-            </div>
+const techBadges = ['NestJS', 'TypeScript', 'PostgreSQL', 'AWS', 'Microservicios', 'Docker', 'Next.js', 'Flutter'];
+const filterTabs: FilterTag[] = ['TODOS', 'WEB APPS', 'HERRAMIENTAS', 'IOT/CLOUD', 'DISEÑO'];
 
-            {/* Center Bottom: Projects Grid */}
-            <div className="rpg-panel h-56 shrink-0 p-5 flex flex-col">
-              <div className="font-display text-[10px] text-silver tracking-widest mb-4">
-                PROYECTOS DESTACADOS
-              </div>
-              <div className="flex-1 grid grid-cols-3 gap-4">
-                {portfolioData.projects.map((p, i) => (
-                  <div key={i} className="hud-project-card p-4 flex flex-col">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="text-xl">{p.icon}</div>
-                      <span className="font-display text-[8px] text-silver leading-snug">{p.title}</span>
-                    </div>
-                    <p className="text-xs text-[#7a8b9c] leading-relaxed mt-auto">{p.desc}</p>
-                    <button onClick={() => setActiveTab('PROYECTOS')} className="rpg-btn-dark w-full mt-3 mt-auto !py-2" style={{ fontSize: '7px' }}>VER PROYECTO</button>
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-center gap-2 mt-3">
-                <div className="w-2 h-2 bg-gold rounded-full" />
-                <div className="w-2 h-2 bg-[#334455] rounded-full" />
-                <div className="w-2 h-2 bg-[#334455] rounded-full" />
-              </div>
-            </div>
-          </>
-        );
+const TERMINAL_MESSAGES = [
+  'Siempre aprendiendo. Siempre construyendo. Siempre mejorando.',
+  'root@marcos-pacheco:~$ full-stack --mode=pro --cloud=aws --lang=typescript',
+  'Construyendo el futuro, un microservicio a la vez.',
+  'root@marcos-pacheco:~$ git push origin main --force-with-lease',
+];
 
-      case 'SOBRE MÍ':
-        return (
-          <div className="rpg-panel flex-1 p-8 overflow-y-auto custom-scrollbar flex flex-col gap-6">
-            <h2 className="font-display text-gold text-lg border-b border-[#334455] pb-4">PERFIL PROFESIONAL</h2>
-            <div className="flex flex-col gap-4 text-silver text-sm leading-relaxed">
-              {portfolioData.profile.split('\n\n').map((paragraph, idx) => (
-                <p key={idx}>{paragraph}</p>
-              ))}
-            </div>
-            
-            <h2 className="font-display text-gold text-lg border-b border-[#334455] pb-4 mt-4">EDUCACIÓN</h2>
-            <div className="flex flex-col gap-4">
-              {portfolioData.education.map((edu, idx) => (
-                <div key={idx} className="bg-[#0a0f19] p-4 border border-[#334455] rounded flex flex-col gap-2">
-                  <h3 className="font-display text-[10px] text-white">{edu.institution}</h3>
-                  <p className="text-[#4488ff] text-xs font-bold">{edu.degree}</p>
-                  <p className="text-[#7a8b9c] text-xs font-pixel">{edu.period}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
+// ─── TERMINAL TYPING ────────────────────────────────────────
+function TerminalTyping() {
+  const [msgIdx, setMsgIdx] = useState(0);
+  const [displayed, setDisplayed] = useState('');
+  const [charIdx, setCharIdx] = useState(0);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-      case 'HABILIDADES':
-        return (
-          <div className="rpg-panel flex-1 p-8 overflow-y-auto custom-scrollbar flex flex-col gap-6">
-            <h2 className="font-display text-gold text-lg border-b border-[#334455] pb-4">TECH STACK</h2>
-            
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-[#0a0f19] p-5 border border-[#334455] rounded">
-                <h3 className="font-display text-[10px] text-[#ff4444] mb-4">BACKEND</h3>
-                <ul className="flex flex-col gap-3">
-                  {portfolioData.techStack.backend.map(tech => (
-                    <li key={tech} className="text-silver text-sm flex items-center gap-2"><span className="text-gold">▹</span> {tech}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-[#0a0f19] p-5 border border-[#334455] rounded">
-                <h3 className="font-display text-[10px] text-[#4488ff] mb-4">FRONTEND & MOBILE</h3>
-                <ul className="flex flex-col gap-3">
-                  {portfolioData.techStack.frontendMobile.map(tech => (
-                    <li key={tech} className="text-silver text-sm flex items-center gap-2"><span className="text-gold">▹</span> {tech}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-[#0a0f19] p-5 border border-[#334455] rounded">
-                <h3 className="font-display text-[10px] text-[#44ff44] mb-4">CLOUD & DEVOPS</h3>
-                <ul className="flex flex-col gap-3">
-                  {portfolioData.techStack.cloudDevOps.map(tech => (
-                    <li key={tech} className="text-silver text-sm flex items-center gap-2"><span className="text-gold">▹</span> {tech}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-[#0a0f19] p-5 border border-[#334455] rounded">
-                <h3 className="font-display text-[10px] text-gold mb-4">DATABASES & OTROS</h3>
-                <ul className="flex flex-col gap-3">
-                  {[...portfolioData.techStack.databases, ...portfolioData.techStack.others].map(tech => (
-                    <li key={tech} className="text-silver text-sm flex items-center gap-2"><span className="text-gold">▹</span> {tech}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'PROYECTOS':
-        return (
-          <div className="rpg-panel flex-1 p-8 overflow-y-auto custom-scrollbar flex flex-col gap-6">
-            <h2 className="font-display text-gold text-lg border-b border-[#334455] pb-4">MIS PROYECTOS</h2>
-            <div className="grid grid-cols-2 gap-6">
-              {portfolioData.projects.map((p, i) => (
-                <div key={i} className="bg-[#0a0f19] p-5 border border-[#334455] rounded flex flex-col h-full group hover:border-[#8294a6] transition-colors">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="text-3xl bg-[#151e2b] p-3 rounded border border-[#334455]">{p.icon}</div>
-                    <h3 className="font-display text-[11px] text-white leading-snug">{p.title}</h3>
-                  </div>
-                  <p className="text-silver text-sm leading-relaxed mb-6 flex-1">{p.desc}</p>
-                  <button className="rpg-btn-dark w-full">EXPLORAR ❯</button>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'EXPERIENCIA':
-        return (
-          <div className="rpg-panel flex-1 p-8 overflow-y-auto custom-scrollbar flex flex-col gap-6">
-            <h2 className="font-display text-gold text-lg border-b border-[#334455] pb-4 flex items-center gap-3">
-              <span>⚔️</span> QUEST LOG (EXPERIENCIA)
-            </h2>
-            <div className="relative border-l-2 border-[#334455] ml-4 pl-6 py-2 flex flex-col gap-8">
-              {portfolioData.experience.map((exp, idx) => (
-                <div key={idx} className="relative">
-                  <div className="absolute -left-[31px] top-1 w-3 h-3 bg-gold rounded-full shadow-[0_0_8px_#f2cc79]" />
-                  <div className="bg-[#0a0f19] p-5 border border-[#334455] rounded">
-                    <div className="flex flex-col mb-3">
-                      <h3 className="font-display text-[12px] text-white">{exp.role}</h3>
-                      <p className="text-gold font-bold text-sm mt-1">{exp.company}</p>
-                      <p className="text-[#7a8b9c] text-xs font-pixel mt-1">{exp.date}</p>
-                    </div>
-                    <ul className="flex flex-col gap-2 mt-4">
-                      {exp.achievements.map((achieve, i) => (
-                        <li key={i} className="text-silver text-xs flex items-start gap-2 leading-relaxed">
-                          <span className="text-[#4488ff] shrink-0 mt-[2px]">▹</span> {achieve}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'CONTACTO':
-        return (
-          <div className="rpg-panel flex-1 p-8 flex flex-col items-center justify-center relative overflow-hidden group">
-            <div className="absolute inset-0 opacity-10">
-               <Image src="/assets/background-portfolio.png" alt="Background" fill className="object-cover" />
-            </div>
-            <div className="relative z-10 bg-[#0a0f19]/90 border border-[#8294a6] p-8 w-full max-w-md flex flex-col gap-6 shadow-[0_0_20px_rgba(0,0,0,0.8)]">
-              <h2 className="font-display text-gold text-center text-xl mb-4">ENVIAR MENSAJE</h2>
-              
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-4 bg-[#151e2b] p-3 border border-[#334455]">
-                  <span className="text-xl">✉️</span>
-                  <div className="flex flex-col">
-                    <span className="font-display text-[7px] text-[#7a8b9c] mb-1">CORREO ELECTRÓNICO</span>
-                    <a href={`mailto:${portfolioData.personalInfo.email}`} className="text-white text-sm hover:text-gold transition-colors">{portfolioData.personalInfo.email}</a>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 bg-[#151e2b] p-3 border border-[#334455]">
-                  <span className="text-xl">📱</span>
-                  <div className="flex flex-col">
-                    <span className="font-display text-[7px] text-[#7a8b9c] mb-1">TELÉFONO</span>
-                    <span className="text-white text-sm">{portfolioData.personalInfo.phone}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 bg-[#151e2b] p-3 border border-[#334455]">
-                  <span className="text-xl">📍</span>
-                  <div className="flex flex-col">
-                    <span className="font-display text-[7px] text-[#7a8b9c] mb-1">UBICACIÓN</span>
-                    <span className="text-white text-sm">{portfolioData.personalInfo.location}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 bg-[#151e2b] p-3 border border-[#334455]">
-                  <span className="text-xl">🔗</span>
-                  <div className="flex flex-col">
-                    <span className="font-display text-[7px] text-[#7a8b9c] mb-1">LINKEDIN</span>
-                    <a href={portfolioData.personalInfo.linkedin} target="_blank" rel="noreferrer" className="text-white text-sm hover:text-gold transition-colors break-all">Visitar Perfil</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      
-      default:
-        return null;
+  useEffect(() => {
+    const msg = TERMINAL_MESSAGES[msgIdx];
+    if (charIdx < msg.length) {
+      timeoutRef.current = setTimeout(() => {
+        setDisplayed(msg.slice(0, charIdx + 1));
+        setCharIdx(c => c + 1);
+      }, 36);
+    } else {
+      timeoutRef.current = setTimeout(() => {
+        setMsgIdx(i => (i + 1) % TERMINAL_MESSAGES.length);
+        setDisplayed('');
+        setCharIdx(0);
+      }, 3000);
     }
-  };
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
+  }, [charIdx, msgIdx]);
 
   return (
-    <div className="h-screen w-screen overflow-hidden text-white font-pixel relative flex flex-col justify-between" style={{ backgroundColor: '#111' }}>
-      
-      {/* Background Layer: Tilemap */}
-      <div 
-        className="absolute inset-0 opacity-30" 
-        style={{ 
-          backgroundImage: "url('/assets/background-portfolio.png')",
-          backgroundSize: '300px',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'center',
-          imageRendering: 'pixelated'
-        }} 
-      />
+    <footer className="terminal-footer">
+      <span className="terminal-prompt">❯ marcos@portfolio:~$</span>
+      <span className="terminal-text">{displayed}</span>
+      <span className="terminal-cursor" />
+    </footer>
+  );
+}
 
-      {/* Main Container - Added padding to mimic safe area */}
-      <div className="relative z-10 w-full h-full p-4 flex flex-col gap-4 max-w-[1600px] mx-auto">
-        
-        {/* ── TOP ROW ─────────────────────────────────────────────── */}
-        <div className="flex justify-between items-start h-28 shrink-0">
-          
-          {/* Character Panel (Replaced with the uploaded card image) */}
-          <div className="relative w-80 h-full drop-shadow-xl hover:scale-[1.02] transition-transform cursor-pointer" onClick={() => setActiveTab('SOBRE MÍ')}>
-            <Image 
-              src="/assets/card-presentacion-personaje.png" 
-              alt="Character Card" 
-              fill 
-              sizes="320px" 
-              className="object-contain object-left" 
-              priority 
-            />
-          </div>
+// ─── RARITY HELPERS ────────────────────────────────────────
+function rarityLabel(r: string) {
+  if (r === 'LEGENDARY') return '★ LEGENDARY';
+  if (r === 'EPIC') return '◆ EPIC';
+  if (r === 'RARE') return '● RARE';
+  return r;
+}
 
-          {/* Top Right Map & Icons */}
-          <div className="flex items-center gap-4 h-full">
-            <div className="rpg-panel flex items-center justify-center gap-3 px-4 h-12">
-              <span onClick={() => setActiveTab('INICIO')} className="text-xl cursor-pointer hover:scale-110 transition-transform text-white-shadow" title="Inicio">🏠</span>
-              <span onClick={() => setActiveTab('PROYECTOS')} className="text-xl cursor-pointer hover:scale-110 transition-transform text-white-shadow" title="Proyectos">🧰</span>
-              <span onClick={() => setActiveTab('EXPERIENCIA')} className="text-xl cursor-pointer hover:scale-110 transition-transform text-white-shadow" title="Experiencia">🏆</span>
-              <span onClick={() => setActiveTab('CONTACTO')} className="text-xl cursor-pointer hover:scale-110 transition-transform text-white-shadow" title="Contacto">✉️</span>
+// ─── PROJECT MODAL ─────────────────────────────────────────
+function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  const imgExists = ['/khipu-craft.png', '/khipu-forms.png', '/qhatupe.png'].includes(project.img);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [onClose]);
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className={`modal-box rarity-${project.rarity}`}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="modal-header">
+          <div className="modal-header-left">
+            <div className="modal-title-row">
+              <span className="modal-emoji">{project.emoji}</span>
+              <span className="modal-title">{project.title}</span>
             </div>
-            
-            <div className="rpg-panel w-40 h-full p-1 cursor-pointer" onClick={() => setActiveTab('INICIO')}>
-              <div className="w-full h-full relative bg-[#111] overflow-hidden border border-[#334455]">
-                <Image src="/assets/background-portfolio.png" alt="Map" fill sizes="160px" className="object-cover scale-[2.5] origin-top-right" style={{ imageRendering: 'pixelated' }} />
-                <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-red-500 rounded-full animate-pulse border border-white" />
-              </div>
+            <div className="modal-subtitle">{project.subtitle}</div>
+            <div className="modal-tag-row">
+              {project.tags.map(t => (
+                <span key={t} className="modal-tag">{t}</span>
+              ))}
             </div>
           </div>
+          <button className="modal-close" onClick={onClose} aria-label="Cerrar">✕</button>
         </div>
 
-        {/* ── MIDDLE ROW ──────────────────────────────────────────── */}
-        <div className="flex justify-between flex-1 gap-4 min-h-0">
-          
-          {/* Left Column */}
-          <div className="flex flex-col gap-4 w-64 shrink-0 h-full">
-            <div className="rpg-panel flex-1 flex flex-col py-2">
-              <div className="px-4 py-3 border-b border-[#334455] mb-2 font-display text-[9px] text-silver tracking-widest">
-                MENÚ PRINCIPAL
-              </div>
-              {(['INICIO', 'SOBRE MÍ', 'HABILIDADES', 'PROYECTOS', 'EXPERIENCIA', 'CONTACTO'] as TabName[]).map((tab, idx) => (
-                <div 
-                  key={tab}
-                  className={`left-menu-item relative ${activeTab === tab ? 'active' : ''} ${idx === 5 ? 'border-b-0' : ''}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab} 
-                  <span className="ml-auto text-lg leading-none opacity-80">
-                    {tab === 'INICIO' && '🗡️'}
-                    {tab === 'SOBRE MÍ' && '👤'}
-                    {tab === 'HABILIDADES' && '📖'}
-                    {tab === 'PROYECTOS' && '🧰'}
-                    {tab === 'EXPERIENCIA' && '📜'}
-                    {tab === 'CONTACTO' && '✉️'}
-                  </span>
+        {/* Image area */}
+        <div className="modal-image-area" style={{ position: 'relative' }}>
+          {imgExists ? (
+            <Image
+              src={project.img}
+              alt={project.title}
+              fill
+              sizes="700px"
+              style={{ objectFit: 'cover', objectPosition: 'top' }}
+            />
+          ) : (
+            <div className="modal-image-placeholder">
+              <div className="modal-image-placeholder-icon">{project.emoji}</div>
+              <div className="modal-image-placeholder-text">{project.title.toUpperCase()}</div>
+            </div>
+          )}
+        </div>
+
+        {/* Body */}
+        <div className="modal-body">
+          {/* Description */}
+          <div>
+            <div className="modal-section-label">▸ DESCRIPCIÓN</div>
+            <p className="modal-desc">{project.longDesc}</p>
+          </div>
+
+          {/* Features */}
+          <div>
+            <div className="modal-section-label">▸ CARACTERÍSTICAS CLAVE</div>
+            <div className="modal-features-list">
+              {project.features.map((f, i) => (
+                <div key={i} className="modal-feature-item">
+                  <span className="modal-feature-check">✓</span>
+                  <span>{f.text}</span>
                 </div>
               ))}
             </div>
+          </div>
 
-            <div className="rpg-panel h-24 p-4 flex flex-col justify-center">
-              <div className="font-display text-[8px] text-silver tracking-widest mb-3">
-                ESTADO DE DESARROLLADOR
-              </div>
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-2 h-2 bg-[#44ff44] rounded-full shadow-[0_0_8px_#44ff44] animate-pulse" />
-                <span className="font-display text-[8px] text-[#44ff44] leading-snug">{portfolioData.personalInfo.status}</span>
-              </div>
+          {/* Metrics */}
+          <div>
+            <div className="modal-section-label">▸ STACK TECNOLÓGICO</div>
+            <div className="modal-tech-row">
+              {project.techStack.map(t => (
+                <span key={t} className="tech-badge-neon">{t}</span>
+              ))}
             </div>
           </div>
 
-          {/* Center Column: DYNAMIC CONTENT */}
-          <div className="flex-1 flex flex-col gap-4 min-w-0">
-            {renderContent()}
-          </div>
-
-          {/* Right Column: Always visible or dynamic? Let's keep it visible on INICIO, but maybe hide or adapt on other tabs? 
-              Actually, the reference layout usually keeps the right column persistent for Skills & Stats, 
-              or we can conditionally hide it so the center panel has more room for Experiences! 
-              Let's make it conditional: only visible on INICIO, SOBRE MÍ, and CONTACTO to give more width to EXPERIENCIA and PROYECTOS if needed, 
-              or just keep it fixed. I'll keep it fixed so the layout doesn't jump around. */}
-          <div className={`flex flex-col gap-4 w-72 shrink-0 h-full ${activeTab === 'EXPERIENCIA' || activeTab === 'PROYECTOS' ? 'hidden xl:flex' : 'flex'}`}>
-            <div className="rpg-panel flex-1 p-5 overflow-hidden flex flex-col">
-              <div className="font-display text-[10px] text-silver tracking-widest mb-6 border-b border-[#334455] pb-3 shrink-0">
-                TOP HABILIDADES
-              </div>
-              <div className="flex flex-col gap-5 flex-1 justify-center">
-                {portfolioData.skillsForChart.map(s => (
-                  <div key={s.name} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 w-28">
-                      <div className="w-5 h-5 bg-[#1a2533] border border-[#334455] rounded flex items-center justify-center font-display text-[8px] text-gold shrink-0">
-                        {s.name.substring(0, 2)}
-                      </div>
-                      <span className="font-display text-[8px] text-white-shadow truncate">{s.name}</span>
-                    </div>
-                    <div className="skill-pip-track shrink-0">
-                      {Array.from({ length: 10 }).map((_, i) => (
-                        <div key={i} className={`skill-pip ${i < s.pips ? `filled ${s.color}` : ''}`} />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rpg-panel h-56 p-5 flex flex-col justify-center shrink-0">
-              <div className="font-display text-[10px] text-silver tracking-widest mb-6 border-b border-[#334455] pb-3">
-                ESTADÍSTICAS
-              </div>
-              <div className="space-y-5">
-                {portfolioData.stats.map(s => (
-                  <div key={s.label} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-gold text-sm">{s.icon}</span>
-                      <span className="font-display text-[7px] text-silver">{s.label}</span>
-                    </div>
-                    <span className="font-display text-[9px] text-gold-shadow">{s.value}</span>
-                  </div>
-                ))}
-              </div>
+          {/* Perf metrics */}
+          <div>
+            <div className="modal-section-label">▸ MÉTRICAS</div>
+            <div className="modal-metrics-row">
+              {project.metrics.map((m, i) => (
+                <div key={i} className="modal-metric">
+                  <div className={`modal-metric-value ${m.color ?? 'cyan'}`}>{m.value}</div>
+                  <div className="modal-metric-label">{m.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* ── FOOTER ROW ──────────────────────────────────────────── */}
-        <div className="h-10 shrink-0 rpg-panel flex justify-between items-center px-6">
-          <div className="flex items-center gap-6 font-display text-[8px] text-silver tracking-widest">
-            <span>{portfolioData.personalInfo.name.toUpperCase()} © 2026</span>
-            <span className="text-[#ff4444]">❤ HECHO CON PASIÓN</span>
+        {/* Footer */}
+        <div className="modal-footer">
+          <a
+            href={project.repoUrl ?? 'https://github.com/'}
+            target="_blank"
+            rel="noreferrer"
+            className="modal-btn-secondary"
+          >
+            🐙 Ver Repositorio
+          </a>
+          <a
+            href={project.demoUrl ?? project.repoUrl ?? '#'}
+            target="_blank"
+            rel="noreferrer"
+            className="modal-btn-primary"
+          >
+            🚀 Ver Demo en Vivo
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PROJECT CARD V2 ───────────────────────────────────────
+function ProjectCardV2({
+  project,
+  onOpen,
+}: {
+  project: Project;
+  onOpen: (p: Project) => void;
+}) {
+  const imgExists = ['/khipu-craft.png', '/khipu-forms.png', '/qhatupe.png'].includes(project.img);
+  const isHighlighted = project.tags.includes('⭐ DESTACADO');
+
+  return (
+    <div
+      className={`project-card-v2 rarity-${project.rarity}`}
+      onClick={() => onOpen(project)}
+    >
+      {/* Thumbnail */}
+      <div className="project-thumb-v2" style={{ position: 'relative' }}>
+        {imgExists ? (
+          <Image
+            src={project.img}
+            alt={project.title}
+            fill
+            sizes="400px"
+            style={{ objectFit: 'cover', objectPosition: 'top' }}
+          />
+        ) : (
+          <div className="project-thumb-placeholder">{project.emoji}</div>
+        )}
+        {/* Badge row */}
+        <div className="card-badges-row">
+          <span className={`card-rarity-badge rarity-${project.rarity}`}>
+            {rarityLabel(project.rarity)}
+          </span>
+          {isHighlighted && (
+            <span className="card-highlight-badge">⭐ DESTACADO</span>
+          )}
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="project-body-v2">
+        <div className="project-category-tag">{project.categoryTag}</div>
+        <div className="project-title-v2">{project.title}</div>
+        <p className="project-desc-v2">{project.desc}</p>
+        <div className="project-tech-row-v2">
+          {project.techStack.slice(0, 4).map(t => (
+            <span key={t} className="tech-pill-v2">{t}</span>
+          ))}
+          {project.techStack.length > 4 && (
+            <span className="tech-pill-v2">+{project.techStack.length - 4}</span>
+          )}
+        </div>
+        <div className="project-footer-v2">
+          <div className="project-stars">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span key={i} className="project-star" style={{ opacity: i < project.stars ? 1 : 0.2 }}>★</span>
+            ))}
           </div>
-          <div className="flex items-center gap-4">
-            <a href={portfolioData.personalInfo.linkedin} target="_blank" rel="noreferrer" className="font-display text-[8px] text-silver hover:text-white cursor-pointer">LINKEDIN</a>
-            <a href={portfolioData.personalInfo.portfolio} target="_blank" rel="noreferrer" className="font-display text-[8px] text-silver hover:text-white cursor-pointer">PORTFOLIO</a>
-            <a href={`mailto:${portfolioData.personalInfo.email}`} className="font-display text-[8px] text-silver hover:text-white cursor-pointer">CORREO</a>
+          <button className="btn-details" onClick={e => { e.stopPropagation(); onOpen(project); }}>
+            Ver detalles →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── HOME VIEW ─────────────────────────────────────────────
+function HomeView({ onTabChange }: { onTabChange: (t: TabName) => void }) {
+  const { achievements } = portfolioData;
+  const [activeFilter, setActiveFilter] = useState<FilterTag>('TODOS');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const filtered = portfolioData.projects.filter(p => {
+    if (activeFilter === 'TODOS') return true;
+    return p.filterTags.includes(activeFilter);
+  });
+
+  return (
+    <>
+      {/* Hero */}
+      <div className="hero-panel">
+        <div className="hero-bg">
+          <Image
+            src="/assets/personaje-mirando-ciudad.png"
+            alt="Marcos mirando la ciudad"
+            fill
+            sizes="100vw"
+            style={{ objectFit: 'cover', objectPosition: 'center 30%', imageRendering: 'pixelated' }}
+            priority
+          />
+        </div>
+        <div className="hero-overlay" />
+        <div className="hero-content">
+          <p className="hero-hello">¡HOLA, SOY</p>
+          <h1 className="hero-name">MARCOS<br />PACHECO</h1>
+          <p className="hero-role">FULL STACK ENGINEER</p>
+          <p className="hero-desc">
+            Construyo sistemas escalables, robustos y eficientes<br />que resuelven problemas reales de negocio.
+          </p>
+          <div className="tech-badges">
+            {techBadges.map(b => <span key={b} className="tech-badge">{b}</span>)}
+          </div>
+          <div className="hero-actions">
+            <button className="btn-primary" onClick={() => onTabChange('PROYECTOS')}>
+              VER PROYECTOS →
+            </button>
+            <a
+              href={portfolioData.personalInfo.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-secondary"
+            >
+              DESCARGAR CV ↓
+            </a>
           </div>
         </div>
       </div>
 
+      {/* LOGROS / Achievements */}
+      <div className="achievements-section">
+        <div className="section-header">
+          <span className="section-title">🏆 LOGROS</span>
+        </div>
+        <div className="achievements-grid">
+          {achievements.map((a, i) => (
+            <div key={i} className={`achievement-card rarity-${a.rarity}`}>
+              <span className="achievement-icon">{a.icon}</span>
+              <span className={`achievement-rarity rarity-${a.rarity}`}>{rarityLabel(a.rarity)}</span>
+              <span className="achievement-title">{a.title}</span>
+              <span className="achievement-desc">{a.desc}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* PROYECTOS COMPLETOS */}
+      <div className="projects-section">
+        <div className="section-header" style={{ marginBottom: '8px' }}>
+          <span className="section-title">🗂️ PROYECTOS</span>
+        </div>
+        <p className="projects-view-desc" style={{ marginBottom: '14px' }}>
+          Explora mis proyectos personales. Cada uno demuestra diferentes habilidades y tecnologías.
+        </p>
+
+        <div className="filter-tabs">
+          {filterTabs.map(f => (
+            <button
+              key={f}
+              className={`filter-tab${activeFilter === f ? ' active' : ''}`}
+              onClick={() => setActiveFilter(f)}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+
+        <div className="projects-grid-v2" style={{ padding: '0', marginTop: '16px' }}>
+          {filtered.map(p => (
+            <ProjectCardV2 key={p.id} project={p} onOpen={setSelectedProject} />
+          ))}
+          {/* New Project Card */}
+          <div className="project-card-new">
+            <div className="project-card-new-icon">+ </div>
+            <div className="project-card-new-title">Nuevo Proyecto</div>
+            <div className="project-card-new-desc">
+              Siempre construyendo algo genial...
+            </div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--color-border-hl)' }}>{'</>'}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal */}
+      {selectedProject && (
+        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      )}
+    </>
+  );
+}
+
+// ─── PROJECT DETAIL PANEL ──────────────────────────────────
+function ProjectDetailPanel({ project }: { project: Project }) {
+  const [imgIdx, setImgIdx] = useState(0);
+  const imgExists = ['/khipu-craft.png', '/khipu-forms.png', '/qhatupe.png'].includes(project.img);
+  const images = imgExists ? [project.img, project.img, project.img] : [];
+
+  return (
+    <div className="proj-detail-panel">
+      <div className="proj-detail-header">
+        <div className="proj-detail-title-row">
+          <span className="proj-detail-emoji">{project.emoji}</span>
+          <div>
+            <div className="proj-detail-title">{project.title}</div>
+            <div className="proj-detail-subtitle">{project.subtitle}</div>
+          </div>
+        </div>
+        <div className="modal-tag-row" style={{ marginTop: '8px' }}>
+          {project.tags.map(t => (
+            <span key={t} className="modal-tag">{t}</span>
+          ))}
+        </div>
+      </div>
+
+      <div className="proj-detail-carousel">
+        <div className="proj-detail-img-main" style={{ position: 'relative' }}>
+          {images.length > 0 ? (
+            <>
+              <Image src={images[imgIdx]} alt={project.title} fill sizes="600px" style={{ objectFit: 'cover', objectPosition: 'top' }} />
+              {images.length > 1 && (
+                <>
+                  <button className="proj-carousel-btn left" onClick={() => setImgIdx(i => (i - 1 + images.length) % images.length)}>&#8249;</button>
+                  <button className="proj-carousel-btn right" onClick={() => setImgIdx(i => (i + 1) % images.length)}>&#8250;</button>
+                </>
+              )}
+            </>
+          ) : (
+            <div className="modal-image-placeholder">
+              <div className="modal-image-placeholder-icon">{project.emoji}</div>
+              <div className="modal-image-placeholder-text">{project.title.toUpperCase()}</div>
+            </div>
+          )}
+        </div>
+        {images.length > 1 && (
+          <div className="proj-detail-thumbs">
+            {images.map((img, i) => (
+              <div key={i} className={`proj-detail-thumb${imgIdx === i ? ' active' : ''}`} style={{ position: 'relative' }} onClick={() => setImgIdx(i)}>
+                <Image src={img} alt={`${project.title} ${i + 1}`} fill sizes="80px" style={{ objectFit: 'cover' }} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="proj-detail-body">
+        <div className="modal-section-label">▸ DESCRIPCIÓN</div>
+        <p className="modal-desc">{project.longDesc}</p>
+        <div className="modal-section-label" style={{ marginTop: '14px' }}>▸ CARACTERÍSTICAS CLAVE</div>
+        <div className="modal-features-list">
+          {project.features.map((f, i) => (
+            <div key={i} className="modal-feature-item">
+              <span className="modal-feature-check">✓</span>
+              <span>{f.text}</span>
+            </div>
+          ))}
+        </div>
+        <div className="modal-section-label" style={{ marginTop: '14px' }}>▸ STACK TECNOLÓGICO</div>
+        <div className="modal-tech-row">
+          {project.techStack.map(t => (
+            <span key={t} className="tech-badge-neon">{t}</span>
+          ))}
+        </div>
+      </div>
+
+      <div className="modal-footer">
+        <a href={project.repoUrl ?? 'https://github.com/'} target="_blank" rel="noreferrer" className="modal-btn-secondary">🐙 Ver Repositorio</a>
+        <a href={project.demoUrl ?? project.repoUrl ?? '#'} target="_blank" rel="noreferrer" className="modal-btn-primary">🚀 Ver Demo en Vivo</a>
+      </div>
+    </div>
+  );
+}
+
+// ─── PROJECT LIST CARD ─────────────────────────────────────
+function ProjectListCard({ project, isSelected, onSelect }: { project: Project; isSelected: boolean; onSelect: () => void }) {
+  const imgExists = ['/khipu-craft.png', '/khipu-forms.png', '/qhatupe.png'].includes(project.img);
+  return (
+    <div className={`proj-list-card${isSelected ? ' selected' : ''} rarity-${project.rarity}`} onClick={onSelect}>
+      {imgExists && isSelected && (
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
+          <Image src={project.img} alt="" fill sizes="400px" style={{ objectFit: 'cover', objectPosition: 'top', opacity: 0.12 }} />
+        </div>
+      )}
+      <div className="proj-list-card-inner">
+        <div className="proj-list-card-top">
+          <span className="proj-list-emoji">{project.emoji}</span>
+          <span className={`card-rarity-badge rarity-${project.rarity}`}>{rarityLabel(project.rarity)}</span>
+        </div>
+        <div className="proj-list-title">{project.title}</div>
+        <p className="proj-list-desc">{project.desc}</p>
+        <div className="project-tech-row-v2" style={{ marginTop: '8px' }}>
+          {project.techStack.slice(0, 3).map(t => <span key={t} className="tech-pill-v2">{t}</span>)}
+          {project.techStack.length > 3 && <span className="tech-pill-v2">+{project.techStack.length - 3}</span>}
+        </div>
+        <div style={{ marginTop: '10px' }}>
+          <span className="btn-details">Ver detalles →</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PROJECTS VIEW ─────────────────────────────────────────
+function ProjectsView() {
+  const [activeFilter, setActiveFilter] = useState<FilterTag>('TODOS');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(portfolioData.projects.find(p => p.id === 'screenforge') || null);
+
+  const filtered = portfolioData.projects.filter(p => {
+    if (activeFilter === 'TODOS') return true;
+    return p.filterTags.includes(activeFilter);
+  });
+
+  const effectiveSelected = filtered.find(p => p.id === selectedProject?.id) ?? filtered[0];
+
+  return (
+    <div className="projects-view-v3">
+      {/* Shortened Hero from HomeView */}
+      <div className="hero-panel" style={{ minHeight: 'auto', flexShrink: 0 }}>
+        <div className="hero-bg">
+          <Image
+            src="/assets/personaje-mirando-ciudad.png"
+            alt="Marcos mirando la ciudad"
+            fill
+            sizes="100vw"
+            style={{ objectFit: 'cover', objectPosition: 'center 30%', imageRendering: 'pixelated' }}
+            priority
+          />
+        </div>
+        <div className="hero-overlay" />
+        <div className="hero-content" style={{ padding: '20px 24px 16px' }}>
+          <p className="hero-hello" style={{ margin: 0 }}>¡HOLA, SOY</p>
+          <h1 className="hero-name" style={{ fontSize: '24px', margin: '4px 0 0' }}>MARCOS PACHECO</h1>
+          <p className="hero-role" style={{ fontSize: '10px', margin: '4px 0 0' }}>FULL STACK ENGINEER</p>
+        </div>
+      </div>
+
+      <div style={{ padding: '16px 20px 10px', flexShrink: 0, borderBottom: '1px solid var(--color-border)' }}>
+        <div className="section-header" style={{ marginBottom: '8px' }}>
+          <span className="section-title">🗂️ PROYECTOS</span>
+        </div>
+        <div className="filter-tabs">
+          {filterTabs.map(f => (
+            <button
+              key={f}
+              className={`filter-tab${activeFilter === f ? ' active' : ''}`}
+              onClick={() => setActiveFilter(f)}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Split Layout: Left List / Right Detail */}
+      <div className="projects-split-body">
+        <div className="projects-list-col">
+          {filtered.map(p => (
+            <ProjectListCard 
+              key={p.id} 
+              project={p} 
+              isSelected={effectiveSelected?.id === p.id} 
+              onSelect={() => setSelectedProject(p)} 
+            />
+          ))}
+          <div className="project-card-new" style={{ margin: '0' }}>
+            <div className="project-card-new-icon">+</div>
+            <div className="project-card-new-title">Nuevo Proyecto</div>
+            <div className="project-card-new-desc">Siempre construyendo algo genial...</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--color-border-hl)' }}>{'</>'}</div>
+          </div>
+        </div>
+        <div className="projects-detail-col">
+          {effectiveSelected && <ProjectDetailPanel project={effectiveSelected} />}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── ABOUT VIEW ────────────────────────────────────────────
+function AboutView() {
+  return (
+    <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+      <div>
+        <div className="about-label">👤 PERFIL PROFESIONAL</div>
+        <div className="about-section-card">
+          {portfolioData.profile.split('\n\n').map((p, i) => (
+            <p key={i} className="about-paragraph">{p}</p>
+          ))}
+        </div>
+      </div>
+      <div>
+        <div className="about-label">🎓 EDUCACIÓN</div>
+        <div className="about-section-card">
+          {portfolioData.education.map((edu, i) => (
+            <div key={i}>
+              <div className="about-edu-inst">{edu.institution}</div>
+              <div className="about-edu-degree">{edu.degree}</div>
+              <div className="about-edu-period">{edu.period}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── SKILLS VIEW ───────────────────────────────────────────
+function SkillsView() {
+  const categories = [
+    { name: 'BACKEND', items: portfolioData.techStack.backend, color: '#ff5555' },
+    { name: 'FRONTEND & MOBILE', items: portfolioData.techStack.frontendMobile, color: '#00d9ff' },
+    { name: 'CLOUD & DEVOPS', items: portfolioData.techStack.cloudDevOps, color: '#27c93f' },
+    { name: 'DATABASES & OTROS', items: [...portfolioData.techStack.databases, ...portfolioData.techStack.others], color: '#f2c94c' },
+  ];
+
+  return (
+    <div style={{ padding: '22px' }}>
+      <div className="section-title" style={{ marginBottom: '18px' }}>⚡ ARSENAL TÉCNICO</div>
+      <div className="skills-grid">
+        {categories.map(cat => (
+          <div key={cat.name} className="skill-category-card">
+            <div className="skill-category-name" style={{ color: cat.color }}>{cat.name}</div>
+            {cat.items.map(item => (
+              <div key={item} className="skill-item">
+                <span className="skill-bullet" style={{ color: cat.color }}>▹</span>
+                {item}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── EXPERIENCE VIEW ───────────────────────────────────────
+function ExperienceView() {
+  return (
+    <div style={{ padding: '22px' }}>
+      <div className="section-title" style={{ marginBottom: '18px' }}>📜 QUEST LOG — EXPERIENCIA</div>
+      <div className="exp-full-timeline">
+        {portfolioData.experience.map((exp, idx) => (
+          <div key={idx} className="exp-full-item">
+            <div
+              className="exp-full-dot"
+              style={{
+                background: idx === 0 ? 'var(--color-cyan)' : 'var(--color-border-hl)',
+                border: `2px solid ${idx === 0 ? 'var(--color-cyan)' : 'var(--color-border)'}`,
+                boxShadow: idx === 0 ? '0 0 8px rgba(0,217,255,0.5)' : 'none',
+              }}
+            />
+            <div className={`exp-full-card ${idx === 0 ? 'active' : ''}`}>
+              <div className="exp-full-role">{exp.role}</div>
+              <div className="exp-full-company">{exp.company}</div>
+              <div className="exp-full-date">
+                {exp.date}
+                {exp.isActive && (
+                  <span className="exp-active-badge" style={{ marginLeft: '8px' }}>Actual</span>
+                )}
+              </div>
+              <ul className="exp-full-list">
+                {exp.achievements.map((a, ai) => (
+                  <li key={ai}>
+                    <span>▹</span>
+                    <span>{a}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── CONTACT VIEW ──────────────────────────────────────────
+function ContactView() {
+  const { personalInfo } = portfolioData;
+  const items = [
+    { icon: '✉️', label: 'CORREO', value: personalInfo.email, href: `mailto:${personalInfo.email}` },
+    { icon: '📱', label: 'TELÉFONO', value: personalInfo.phone, href: null },
+    { icon: '📍', label: 'UBICACIÓN', value: 'Lima, Perú', href: null },
+    { icon: '🔗', label: 'LINKEDIN', value: 'Ver perfil →', href: personalInfo.linkedin },
+    { icon: '🌐', label: 'PORTFOLIO', value: 'maquiadev.com →', href: personalInfo.portfolio },
+  ];
+
+  return (
+    <div style={{ padding: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
+      <div className="contact-box">
+        <div className="contact-title">INICIAR CONTACTO</div>
+        {items.map(item => (
+          <div key={item.label} className="contact-item">
+            <span className="contact-icon">{item.icon}</span>
+            <div>
+              <div className="contact-label">{item.label}</div>
+              {item.href
+                ? <a href={item.href} target="_blank" rel="noreferrer" className="contact-value-link">{item.value}</a>
+                : <span className="contact-value-text">{item.value}</span>
+              }
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN COMPONENT ────────────────────────────────────────
+export default function Portfolio() {
+  const [activeTab, setActiveTab] = useState<TabName>('INICIO');
+
+  const renderCenter = () => {
+    switch (activeTab) {
+      case 'INICIO': return <HomeView onTabChange={setActiveTab} />;
+      case 'SOBRE MÍ': return <AboutView />;
+      case 'HABILIDADES': return <SkillsView />;
+      case 'PROYECTOS': return <ProjectsView />;
+      case 'EXPERIENCIA': return <ExperienceView />;
+      case 'CONTACTO': return <ContactView />;
+      default: return <HomeView onTabChange={setActiveTab} />;
+    }
+  };
+
+  return (
+    <div className="portfolio-root">
+      <div className="portfolio-columns">
+
+        {/* ── LEFT COLUMN ── */}
+        <aside className="col-left">
+          {/* Character card */}
+          <div className="char-card">
+            <Image
+              src="/assets/card-presentacion-personaje.png"
+              alt="Marcos Pacheco – Full Stack Engineer"
+              width={420}
+              height={420}
+              style={{ width: '100%', height: 'auto', display: 'block', imageRendering: 'pixelated' }}
+              priority
+            />
+          </div>
+
+          {/* Menu */}
+          <div className="menu-section-title">MENÚ PRINCIPAL</div>
+          <nav>
+            {menuItems.map(({ tab, icon }) => (
+              <div
+                key={tab}
+                className={`menu-item${activeTab === tab ? ' active' : ''}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                <span className="menu-icon">{icon}</span>
+                {tab}
+              </div>
+            ))}
+          </nav>
+
+          <div style={{ flex: 1 }} />
+
+          {/* Status box */}
+          <div className="status-box">
+            <div className="menu-section-title" style={{ padding: '0 0 7px', fontSize: '6px' }}>ESTADO</div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '5px' }}>
+              <span className="status-dot" style={{ marginTop: '3px' }} />
+              <span className="status-label">Disponible para nuevos desafíos</span>
+            </div>
+            <div className="status-sub">• Abierto a oportunidades<br />  Full-time / Remoto</div>
+          </div>
+
+          {/* Quote box */}
+          <div className="quote-box">
+            <span className="quote-text">
+              "Construyo soluciones escalables que resuelven problemas reales y generan impacto."
+            </span>
+          </div>
+
+          {/* Footer branding */}
+          <div style={{ padding: '10px 14px', borderTop: '1px solid var(--color-border)', flexShrink: 0 }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '5.5px', color: 'var(--color-text-dim)', lineHeight: 2 }}>
+              © 2026 Marcos Pacheco
+            </div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '5.5px', color: '#ff5555' }}>
+              HECHO CON PASIÓN ❤
+            </div>
+          </div>
+        </aside>
+
+        {/* ── CENTER COLUMN ── */}
+        <main className="col-center">
+          {/* Top bar */}
+          <div className="top-bar">
+            <a href="#" className="top-bar-item">
+              <span className="icon">📍</span> Lima, Perú
+            </a>
+            <a href={`mailto:${portfolioData.personalInfo.email}`} className="top-bar-item">
+              <span className="icon">✉</span> {portfolioData.personalInfo.email}
+            </a>
+            <a href={portfolioData.personalInfo.linkedin} target="_blank" rel="noreferrer" className="top-bar-item">
+              <span className="icon">in</span> marcos-pacheco-tacay
+            </a>
+            <a href={portfolioData.personalInfo.portfolio} target="_blank" rel="noreferrer" className="top-bar-item">
+              <span className="icon">🌐</span> maquiadev.com
+            </a>
+          </div>
+
+          <div style={{ flex: 1, overflow: 'hidden', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+            {renderCenter()}
+          </div>
+        </main>
+
+      </div>
+
+      <TerminalTyping />
       <div className="crt-overlay" />
     </div>
   );
