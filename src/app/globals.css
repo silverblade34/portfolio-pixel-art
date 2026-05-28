@@ -202,7 +202,7 @@ body {
 }
 
 .char-card img {
-  max-width: 170px;
+  max-width: 220px;
   width: 100%;
   display: block;
   image-rendering: pixelated;
@@ -3080,7 +3080,7 @@ body {
 
 /* ── Right sidebar ── */
 .exp-sidebar {
-  width: 260px;
+  width: 300px;
   min-width: 240px;
   flex-shrink: 0;
   overflow-y: auto;

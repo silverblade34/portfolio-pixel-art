@@ -22,6 +22,50 @@ const menuItems: { tab: TabName; icon: string }[] = [
   { tab: 'CONTACTO', icon: '✉️' },
 ];
 
+const assetsToPreload = [
+  // Backgrounds & Heroes
+  '/assets/personaje-mirando-ciudad-alargado.png',
+  '/assets/sprites/experiencia/fondo-mapa-experiencia.png',
+  '/assets/sprites/experiencia/card-leyenda.png',
+  '/assets/sprites/experiencia/card-proxima-aventura.png',
+  '/assets/sprites/experiencia/personaje-inicio-aventura.png',
+  
+  // Experience Nodes/Flags
+  '/assets/sprites/experiencia/experiencia-bandera-1.png',
+  '/assets/sprites/experiencia/experiencia-bandera-2.png',
+  '/assets/sprites/experiencia/experiencia-bandera-3.png',
+  '/assets/sprites/experiencia/experiencia-bandera-4.png',
+  '/assets/sprites/experiencia/experiencia-bandera-5.png',
+  '/assets/sprites/experiencia/experiencia-bandera-6.png',
+  '/assets/sprites/experiencia/experiencia-bandera-7.png',
+  '/assets/sprites/experiencia/experiencia-bandera-8.png',
+
+  // Stats Sprites
+  '/assets/sprites/experiencia/estadisticas-aventura-aventuras-completadas.png',
+  '/assets/sprites/experiencia/estadisticas-aventura-experiencia-profesional.png',
+  '/assets/sprites/experiencia/estadisticas-aventura-proyectos-construidos.png',
+  '/assets/sprites/experiencia/estadisticas-aventura-usuarios-impactados.png',
+  '/assets/sprites/experiencia/estadisticas-aventura-aprendizaje-constante.png',
+
+  // Skills Categories
+  '/assets/sprites/icono-backend.png',
+  '/assets/sprites/icono-frontend.png',
+  '/assets/sprites/icono-cloud.png',
+  '/assets/sprites/icono-database.png',
+  '/assets/sprites/elementos-generales-ver-detalle.png',
+
+  // Skills Stats & Legend Badges
+  '/assets/sprites/iconos-estadisticas-total-tecnologias.png',
+  '/assets/sprites/iconos-estadistica-dominio-general.png',
+  '/assets/sprites/iconos-estadistica-categoria.png',
+  '/assets/sprites/iconos-estadistica-filosofia.png',
+  '/assets/sprites/icono-mis-principios.png',
+  '/assets/sprites/badges-nivel-legendary.png',
+  '/assets/sprites/badges-nivel-epic.png',
+  '/assets/sprites/badges-nivel-rare.png',
+  '/assets/sprites/badges-nivel-common.png',
+];
+
 // ─── MAIN COMPONENT ────────────────────────────────────────
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState<TabName>('INICIO');
@@ -32,6 +76,14 @@ export default function Portfolio() {
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = 0.3;
+    }
+
+    // Preload image assets asynchronously on client mount
+    if (typeof window !== 'undefined') {
+      assetsToPreload.forEach((src) => {
+        const img = new window.Image();
+        img.src = src;
+      });
     }
   }, []);
 
@@ -75,7 +127,7 @@ export default function Portfolio() {
             <Image
               src="/assets/card-presentacion-personaje.png"
               alt="Marcos Pacheco – Full Stack Engineer"
-              width={250}
+              width={200}
               height={200}
               style={{ width: '100%', height: 'auto', display: 'block', imageRendering: 'pixelated' }}
               priority

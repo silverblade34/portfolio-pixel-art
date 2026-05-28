@@ -93,7 +93,7 @@ const nodeXpDetails: Record<number, {
   6: {
     startLevel: 75,
     endLevel: 90,
-    xpEarned: 3500,
+    xpEarned: 3100,
     finalPercent: 90,
     quote: "Desarrollo a gran escala y mentoría."
   },
