@@ -69,8 +69,8 @@ body {
    COLUMNS
 ═══════════════════════════════════════════════════════════════ */
 .col-left {
-  width: 330px;
-  min-width: 330px;
+  width: 240px;
+  min-width: 240px;
   flex-shrink: 0;
   overflow-y: auto;
   overflow-x: hidden;
@@ -196,14 +196,16 @@ body {
   border-bottom: 1px solid var(--color-border);
   position: relative;
   overflow: hidden;
-  padding: 5px;
+  padding: 6px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .char-card img {
+  max-width: 170px;
   width: 100%;
   display: block;
   image-rendering: pixelated;
-  transform: scale(1);
   transform-origin: center top;
 }
 
@@ -1977,6 +1979,8 @@ body {
 .projects-view-scroll {
   flex: 1;
   padding: 16px 22px 24px;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .projects-view-scroll::-webkit-scrollbar {
@@ -2733,7 +2737,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 300px;
+    width: 240px;
     height: 100%;
     z-index: 100;
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.8);
@@ -2869,7 +2873,8 @@ body {
 .exp-main-body {
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── MAP layout ── */
@@ -2965,12 +2970,12 @@ body {
 }
 
 .exp-map-node.selected {
-  transform: translate(-50%, -50%) scale(1.15);
+  transform: translate(-50%, -50%) scale(1.08);
   filter: drop-shadow(0 0 8px var(--color-cyan));
 }
 
 .exp-map-node:hover {
-  transform: translate(-50%, -50%) scale(1.12);
+  transform: translate(-50%, -50%) scale(1.05);
   filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3));
 }
 
@@ -3215,6 +3220,28 @@ body {
 
 .exp-xp-section {
   gap: 6px;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+@keyframes levelUpFlash {
+  0% {
+    filter: drop-shadow(0 0 0px rgba(242, 201, 76, 0));
+    transform: scale(1);
+  }
+
+  30% {
+    filter: drop-shadow(0 0 15px rgba(242, 201, 76, 0.8));
+    transform: scale(1.03);
+  }
+
+  100% {
+    filter: drop-shadow(0 0 0px rgba(242, 201, 76, 0));
+    transform: scale(1);
+  }
+}
+
+.level-up-flash {
+  animation: levelUpFlash 0.6s ease-out;
 }
 
 .exp-xp-value {
@@ -3410,25 +3437,80 @@ body {
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
+  .exp-view-root {
+    overflow-y: auto;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .exp-map-layout {
     flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .exp-map-left {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .exp-map-left::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .exp-map-left::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .exp-map-left::-webkit-scrollbar-thumb {
+    background: var(--color-border-hl);
+    border-radius: 2px;
+  }
+
+  .exp-map-container {
+    width: 850px;
+    height: 400px;
+    min-height: 400px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .exp-stats-bar {
+    width: 850px;
+    flex-shrink: 0;
   }
 
   .exp-sidebar {
     width: 100%;
     min-width: unset;
     border-top: 1px solid var(--color-border);
-    max-height: 300px;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .exp-timeline-wrap {
+    height: auto;
+    overflow: visible;
   }
 
   .exp-logros-wrap {
     grid-template-columns: repeat(2, 1fr);
+    height: auto;
+    overflow: visible;
   }
 }
 
 @media (max-width: 600px) {
   .exp-logros-wrap {
     grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
   }
 
   .exp-stats-row {

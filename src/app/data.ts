@@ -230,6 +230,7 @@ export const portfolioData = {
       role: "Desarrollador Full Stack",
       date: "jul. 2025 – actualidad",
       isActive: true,
+      mission: "Actualmente formo parte del desarrollo de un OMS (Order Management System) y WMS (Warehouse Management System) sobre una arquitectura de microservicios en AWS (ECS, ECR, EC2, S3 y RDS).",
       achievements: [
         "Desarrollo y optimización de un OMS/WMS sobre arquitectura de microservicios en AWS.",
         "Lideré el microservicio de devoluciones desde cero.",
@@ -246,6 +247,7 @@ export const portfolioData = {
       role: "Desarrollador Full Stack",
       date: "jun. 2024 – jul. 2025",
       isActive: false,
+      mission: "Participé en el diseño e implementación de un sistema de monitoreo indoor utilizando tecnologías IoT basadas en beacons y gateways, permitiendo la detección en tiempo real y el análisis de datos.",
       achievements: [
         "Sistema indoor tracking IoT con beacons y gateways.",
         "Backend Java y Node.js con AWS Lambda y API Gateway.",
@@ -260,6 +262,7 @@ export const portfolioData = {
       role: "Analista de Sistemas",
       date: "abr. 2025 – jun. 2025",
       isActive: false,
+      mission: "Desarrollo de un sistema de distribución energética utilizando Spring Boot, MySQL y Amazon S3, integrando sistemas de IA para optimización.",
       achievements: [
         "Sistema de distribución energética con Spring Boot.",
         "IA para optimización energética y APIs REST.",
@@ -273,6 +276,7 @@ export const portfolioData = {
       role: "Mobile Developer",
       date: "ene. 2025 – mar. 2025",
       isActive: false,
+      mission: "Desarrollo de módulo de red social para aplicativo móvil UCV Trilce utilizando Flutter, implementando comunidades, posts y foros.",
       achievements: [
         "Módulo red social Flutter para comunidades universitarias.",
         "Posts, foros y optimización para alto tráfico.",
@@ -286,6 +290,7 @@ export const portfolioData = {
       role: "Analista de Sistemas",
       date: "feb. 2024 – jun. 2024",
       isActive: false,
+      mission: "Responsable de optimizar sistemas .NET para la gestión aduanera, migrar apps de Ionic a Flutter y contribuir a un ERP móvil que aumentó la eficiencia operativa.",
       achievements: [
         "Optimización sistemas .NET y migración Ionic → Flutter.",
         "ERP móvil y automatización con AWS Lambda y Python.",
@@ -299,6 +304,7 @@ export const portfolioData = {
       role: "Full Stack Developer",
       date: "dic. 2022 – feb. 2024",
       isActive: false,
+      mission: "Desarrollo de sistemas de seguridad y rastreo GPS, implementando alarmas personalizables y visualización de datos en tiempo real, utilizando WebSockets, API Gateway y AWS Lambda.",
       achievements: [
         "GPS y seguridad en tiempo real con WebSockets.",
         "API Gateway, AWS Lambda, S3, EC2 y plataformas multiusuario.",
@@ -312,6 +318,7 @@ export const portfolioData = {
       role: "Programador Junior",
       date: "ago. 2022 – nov. 2022",
       isActive: false,
+      mission: "Participé en el desarrollo de soluciones web, enfocándome principalmente en la lógica del backend utilizando JavaScript, TypeScript, Express y NestJS.",
       achievements: [
         "APIs REST con Express, NestJS y TypeScript.",
       ],

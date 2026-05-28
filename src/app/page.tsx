@@ -75,8 +75,8 @@ export default function Portfolio() {
             <Image
               src="/assets/card-presentacion-personaje.png"
               alt="Marcos Pacheco – Full Stack Engineer"
-              width={420}
-              height={420}
+              width={250}
+              height={200}
               style={{ width: '100%', height: 'auto', display: 'block', imageRendering: 'pixelated' }}
               priority
             />
@@ -107,13 +107,6 @@ export default function Portfolio() {
               <span className="status-label">Disponible para nuevos desafíos</span>
             </div>
             <div className="status-sub">• Abierto a oportunidades<br />  Full-time / Remoto</div>
-          </div>
-
-          {/* Quote box */}
-          <div className="quote-box">
-            <span className="quote-text">
-              &quot;Construyo soluciones escalables que resuelven problemas reales y generan impacto.&quot;
-            </span>
           </div>
 
           {/* Footer branding */}
@@ -149,7 +142,7 @@ export default function Portfolio() {
             </a>
           </div>
 
-          <div style={{ flex: 1, overflow: ['PROYECTOS', 'EXPERIENCIA'].includes(activeTab) ? 'hidden' : 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, overflow: activeTab === 'EXPERIENCIA' ? 'hidden' : 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             {renderCenter()}
           </div>
         </main>

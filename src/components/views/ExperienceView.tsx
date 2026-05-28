@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { portfolioData } from '@/app/data';
 
@@ -9,7 +9,7 @@ type ExpTab = 'MAPA' | 'LINEA' | 'LOGROS';
 // Map node positions (% of container width/height)
 const mapNodes = [
   { id: 1, x: 18, y: 65 }, // PRESTACLUB
-  { id: 2, x: 40, y: 85 }, // SYS & NET Full Stack
+  { id: 2, x: 40, y: 75 }, // SYS & NET Full Stack
   { id: 3, x: 65, y: 65 }, // MANTRA
   { id: 4, x: 45, y: 45 }, // SYS & NET second
   { id: 5, x: 25, y: 30 }, // D&A
@@ -47,10 +47,124 @@ const unlockedAchievements = [
   { color: 'gold', text: 'APIs REST de alto rendimiento' },
 ];
 
+const nodeXpDetails: Record<number, {
+  startLevel: number;
+  endLevel: number;
+  xpEarned: number;
+  finalPercent: number;
+  quote: string;
+  isMax?: boolean;
+}> = {
+  1: {
+    startLevel: 1,
+    endLevel: 15,
+    xpEarned: 1500,
+    finalPercent: 65,
+    quote: "El inicio del viaje. Aprendiendo los fundamentos del desarrollo."
+  },
+  2: {
+    startLevel: 15,
+    endLevel: 30,
+    xpEarned: 2000,
+    finalPercent: 70,
+    quote: "Subiendo de nivel. Dominando el desarrollo Full Stack."
+  },
+  3: {
+    startLevel: 30,
+    endLevel: 45,
+    xpEarned: 2000,
+    finalPercent: 75,
+    quote: "Afrontando retos más complejos en equipo."
+  },
+  4: {
+    startLevel: 45,
+    endLevel: 60,
+    xpEarned: 2500,
+    finalPercent: 80,
+    quote: "Liderando módulos clave y optimizando sistemas."
+  },
+  5: {
+    startLevel: 60,
+    endLevel: 75,
+    xpEarned: 3000,
+    finalPercent: 85,
+    quote: "Especialización y arquitectura en la nube."
+  },
+  6: {
+    startLevel: 75,
+    endLevel: 90,
+    xpEarned: 3500,
+    finalPercent: 90,
+    quote: "Desarrollo a gran escala y mentoría."
+  },
+  7: {
+    startLevel: 90,
+    endLevel: 99,
+    xpEarned: 3500,
+    finalPercent: 100,
+    quote: "Alcanzando la maestría. Misiones legendarias en AWS y microservicios.",
+    isMax: true
+  }
+};
+
 export function ExperienceView() {
   const [activeTab, setActiveTab] = useState<ExpTab>('MAPA');
   const [hoveredNode, setHoveredNode] = useState<number | null>(null);
   const [selectedNodeId, setSelectedNodeId] = useState<number>(7);
+
+  const [animatedLevel, setAnimatedLevel] = useState(1);
+  const [animatedXp, setAnimatedXp] = useState(0);
+  const [animatedPercent, setAnimatedPercent] = useState(0);
+  const [isLevelUp, setIsLevelUp] = useState(false);
+
+  useEffect(() => {
+    const config = nodeXpDetails[selectedNodeId];
+    if (!config) return;
+
+    const duration = 1200; // ms
+    const startXpValue = Math.min(300, config.xpEarned);
+    const startPercent = 15;
+
+    let animationFrameId: number;
+
+    // Reset and start animation asynchronously inside requestAnimationFrame
+    animationFrameId = requestAnimationFrame((now) => {
+      setAnimatedLevel(config.startLevel);
+      setAnimatedXp(startXpValue);
+      setAnimatedPercent(startPercent);
+      setIsLevelUp(false);
+
+      const startTime = now;
+
+      const animate = (time: number) => {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Easing function: easeOutQuad
+        const ease = progress * (2 - progress);
+
+        const currentLvl = Math.floor(config.startLevel + (config.endLevel - config.startLevel) * ease);
+        const currentXpVal = Math.floor(startXpValue + (config.xpEarned - startXpValue) * ease);
+        const currentPercentVal = startPercent + (config.finalPercent - startPercent) * ease;
+
+        setAnimatedLevel(currentLvl);
+        setAnimatedXp(currentXpVal);
+        setAnimatedPercent(currentPercentVal);
+
+        if (progress < 1) {
+          animationFrameId = requestAnimationFrame(animate);
+        } else {
+          setIsLevelUp(true);
+        }
+      };
+
+      animationFrameId = requestAnimationFrame(animate);
+    });
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [selectedNodeId]);
 
   const currentExp = portfolioData.experience[nodeExpMap[selectedNodeId]];
   const currentNodeLevel = selectedNodeId;
@@ -267,9 +381,9 @@ export function ExperienceView() {
 
               {/* Mission */}
               <div className="exp-sidebar-section">
-                <div className="exp-sidebar-label">MISIÓN ACTUAL</div>
+                <div className="exp-sidebar-label">{currentExp.isActive ? 'MISIÓN ACTUAL' : 'MISIÓN'}</div>
                 <p className="exp-mission-text">
-                  Desarrollo y optimización de un OMS/WMS sobre arquitectura de microservicios en AWS, liderando soluciones escalables.
+                  {currentExp.mission}
                 </p>
               </div>
 
@@ -297,14 +411,17 @@ export function ExperienceView() {
               </div>
 
               {/* XP */}
-              <div className="exp-sidebar-section exp-xp-section">
+              <div className={`exp-sidebar-section exp-xp-section${isLevelUp ? ' level-up-flash' : ''}`}>
                 <div className="exp-sidebar-label">EXPERIENCIA OBTENIDA</div>
-                <div className="exp-xp-value">+1200 XP</div>
+                <div className="exp-xp-value">+{animatedXp.toLocaleString()} XP</div>
                 <div className="exp-xp-bar-wrap">
-                  <div className="exp-xp-bar-fill" style={{ width: '90%' }} />
+                  <div className="exp-xp-bar-fill" style={{ width: `${animatedPercent}%`, transition: 'none' }} />
                 </div>
-                <div className="exp-xp-meta"><span>Nivel 99</span><span>MAX</span></div>
-                <p className="exp-quote">"Cada línea de código es un paso más en esta gran aventura."</p>
+                <div className="exp-xp-meta">
+                  <span>Nivel {animatedLevel}</span>
+                  <span>{nodeXpDetails[selectedNodeId]?.isMax ? 'MAX' : 'SIGUIENTE'}</span>
+                </div>
+                <p className="exp-quote">{`"${nodeXpDetails[selectedNodeId]?.quote}"`}</p>
                 <Image
                   src="/assets/sprites/experiencia/personaje-inicio-aventura.png"
                   alt="Personaje"

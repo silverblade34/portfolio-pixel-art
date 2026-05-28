@@ -19,9 +19,9 @@ export function ProjectsView() {
   });
 
   return (
-    <div className="projects-view-v3">
+    <div className="skills-view-container">
       {/* Hero identical to Skills */}
-      <div className="skills-header-area" style={{ margin: 0, padding: '30px 44px' }}>
+      <div className="skills-header-area">
         <Image 
           src="/assets/personaje-mirando-ciudad-alargado.png" 
           alt="Hero Background" 
@@ -46,7 +46,7 @@ export function ProjectsView() {
       </div>
 
       {/* Filter tabs moved outside the hero */}
-      <div className="filter-tabs" style={{ padding: '0 22px 16px', borderBottom: '1px solid var(--color-border)' }}>
+      <div className="filter-tabs" style={{ padding: '0 0 16px', borderBottom: '1px solid var(--color-border)' }}>
         {filterTabs.map(f => (
           <button
             key={f}
@@ -58,21 +58,19 @@ export function ProjectsView() {
         ))}
       </div>
 
-      {/* Grid scrollable area */}
-      <div className="projects-view-scroll">
-        <div className="projects-grid-v2" style={{ padding: '0', marginTop: '0' }}>
-          {filtered.map(p => (
-            <ProjectCardV2 key={p.id} project={p} onOpen={setSelectedProject} />
-          ))}
-          {/* New Project Card */}
-          <div className="project-card-new">
-            <div className="project-card-new-icon">+ </div>
-            <div className="project-card-new-title">Nuevo Proyecto</div>
-            <div className="project-card-new-desc">
-              Siempre construyendo algo genial...
-            </div>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--color-border-hl)' }}>{'</>'}</div>
+      {/* Grid area */}
+      <div className="projects-grid-v2" style={{ padding: '0', marginTop: '0' }}>
+        {filtered.map(p => (
+          <ProjectCardV2 key={p.id} project={p} onOpen={setSelectedProject} />
+        ))}
+        {/* New Project Card */}
+        <div className="project-card-new">
+          <div className="project-card-new-icon">+ </div>
+          <div className="project-card-new-title">Nuevo Proyecto</div>
+          <div className="project-card-new-desc">
+            Siempre construyendo algo genial...
           </div>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--color-border-hl)' }}>{'</>'}</div>
         </div>
       </div>
 
