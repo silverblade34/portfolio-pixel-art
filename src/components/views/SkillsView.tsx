@@ -1,7 +1,10 @@
 'use client';
 
-import React from 'react';
 import Image from 'next/image';
+
+// Size constants for badge images
+const BADGE_LEVEL_SIZE = { width: 42, height: 18 };
+const LEGEND_ICON_SIZE = { width: 42, height: 18 };
 
 export function SkillsView() {
   const stats = [
@@ -81,18 +84,18 @@ export function SkillsView() {
     <div className="skills-view-container">
       {/* Header section */}
       <div className="skills-header-area">
-        <Image 
-          src="/assets/personaje-mirando-ciudad-alargado.png" 
-          alt="Hero Background" 
-          fill 
-          style={{ objectFit: 'cover', objectPosition: 'center', zIndex: 0, opacity: 0.8, imageRendering: 'pixelated' }} 
+        <Image
+          src="/assets/personaje-mirando-ciudad-alargado.png"
+          alt="Hero Background"
+          fill
+          style={{ objectFit: 'cover', objectPosition: 'center', zIndex: 0, opacity: 0.8, imageRendering: 'pixelated' }}
           priority
         />
         {/* Overlays to blend into the main background */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to right, rgba(8,11,16,1) 0%, rgba(8,11,16,0.6) 40%, transparent 80%)', zIndex: 1 }} />
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to top, rgba(8,11,16,1) 0%, transparent 50%)', zIndex: 1 }} />
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(8,11,16,1) 0%, transparent 20%)', zIndex: 1 }} />
-        
+
         <div className="skills-header-content">
           <div className="skills-main-title">
             <span className="skills-bolt">⚡</span>
@@ -133,7 +136,7 @@ export function SkillsView() {
               <Image src="/assets/sprites/elementos-generales-ver-detalle.png" alt="Ver detalle" width={60} height={18} className="btn-ver-detalle-img" style={{ imageRendering: 'pixelated' }} />
             </div>
             <p className="skill-cat-subtitle">{cat.subtitle}</p>
-            
+
             <div className="skill-cat-tech-list">
               {cat.techs.map(tech => (
                 <div key={tech.name} className="tech-item-row">
@@ -143,7 +146,7 @@ export function SkillsView() {
                   <div className="tech-item-info">
                     <div className="tech-item-title-row">
                       <span className="tech-item-name">{tech.name}</span>
-                      <Image src={`/assets/sprites/badges-nivel-${tech.level.toLowerCase()}.png`} alt={tech.level} width={50} height={14} style={{ imageRendering: 'pixelated', width: 'auto', height: '12px' }} />
+                      <Image src={`/assets/sprites/badges-nivel-${tech.level.toLowerCase()}.png`} alt={tech.level} width={BADGE_LEVEL_SIZE.width} height={BADGE_LEVEL_SIZE.height} style={{ imageRendering: 'pixelated', width: 'auto', height: `${BADGE_LEVEL_SIZE.height}px` }} />
                       {tech.badges.map(b => (
                         <span key={b} className="tech-item-extra-badge">{b}</span>
                       ))}
@@ -171,7 +174,7 @@ export function SkillsView() {
             </div>
             <p className="loadout-desc">Tecnologías que más utilizo actualmente<br />en mis proyectos.</p>
           </div>
-          
+
           <div className="loadout-content">
             <div className="loadout-col color-red">
               <div className="loadout-label color-red">BACKEND</div>
@@ -180,9 +183,9 @@ export function SkillsView() {
                 <div className="loadout-item"><Image src="/assets/sprites/tecnologias-backend-nodejs.png" alt="Node.js" width={16} height={16} style={{ imageRendering: 'pixelated' }} /> <span>Node.js</span></div>
               </div>
             </div>
-            
+
             <div style={{ color: 'var(--color-silver)', fontSize: '18px', fontWeight: 'bold' }}>+</div>
-            
+
             <div className="loadout-col color-gold">
               <div className="loadout-label color-gold">DATABASE</div>
               <div className="loadout-items">
@@ -190,7 +193,7 @@ export function SkillsView() {
                 <div className="loadout-item"><Image src="/assets/sprites/tecnologias-databases-redis.png" alt="Redis" width={16} height={16} style={{ imageRendering: 'pixelated' }} /> <span>Redis</span></div>
               </div>
             </div>
-            
+
             <div className="loadout-col color-cyan">
               <div className="loadout-label color-cyan">FRONTEND</div>
               <div className="loadout-items">
@@ -198,7 +201,7 @@ export function SkillsView() {
                 <div className="loadout-item"><Image src="/assets/sprites/tecnologias-frontend-tailwind.png" alt="Tailwind CSS" width={16} height={16} style={{ imageRendering: 'pixelated' }} /> <span>Tailwind CSS</span></div>
               </div>
             </div>
-            
+
             <div className="loadout-col color-green">
               <div className="loadout-label color-green">DEPLOY</div>
               <div className="loadout-items">
@@ -227,28 +230,28 @@ export function SkillsView() {
         <div className="legend-items">
           <div className="legend-item">
             <div className="legend-item-title color-gold">
-              <Image src="/assets/sprites/elementos-generales-legendary.png" alt="Icon" width={16} height={16} style={{ imageRendering: 'pixelated' }} />
+              <Image src="/assets/sprites/badges-nivel-legendary.png" alt="Icon" width={LEGEND_ICON_SIZE.width} height={LEGEND_ICON_SIZE.height} style={{ imageRendering: 'pixelated' }} />
               LEGENDARY
             </div>
             <span>Dominio sólido y experiencia comprobada en producción</span>
           </div>
           <div className="legend-item">
             <div className="legend-item-title color-purple">
-              <Image src="/assets/sprites/elementos-generales-epic.png" alt="Icon" width={16} height={16} style={{ imageRendering: 'pixelated' }} />
+              <Image src="/assets/sprites/badges-nivel-epic.png" alt="Icon" width={LEGEND_ICON_SIZE.width} height={LEGEND_ICON_SIZE.height} style={{ imageRendering: 'pixelated' }} />
               EPIC
             </div>
             <span>Amplia experiencia y proyectos importantes</span>
           </div>
           <div className="legend-item">
             <div className="legend-item-title color-cyan">
-              <Image src="/assets/sprites/elementos-generales-rare.png" alt="Icon" width={16} height={16} style={{ imageRendering: 'pixelated' }} />
+              <Image src="/assets/sprites/badges-nivel-rare.png" alt="Icon" width={LEGEND_ICON_SIZE.width} height={LEGEND_ICON_SIZE.height} style={{ imageRendering: 'pixelated' }} />
               RARE
             </div>
             <span>Conocimientos sólidos y proyectos menores</span>
           </div>
           <div className="legend-item">
             <div className="legend-item-title color-silver">
-              <Image src="/assets/sprites/elementos-generales-common.png" alt="Icon" width={16} height={16} style={{ imageRendering: 'pixelated' }} />
+              <Image src="/assets/sprites/badges-nivel-common.png" alt="Icon" width={LEGEND_ICON_SIZE.width} height={LEGEND_ICON_SIZE.height} style={{ imageRendering: 'pixelated' }} />
               COMMON
             </div>
             <span>Conocimientos básicos</span>

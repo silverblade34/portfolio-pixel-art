@@ -127,7 +127,7 @@ export default function Portfolio() {
             </a>
           </div>
 
-          <div style={{ flex: 1, overflow: activeTab === 'PROYECTOS' ? 'hidden' : 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, overflow: 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             {renderCenter()}
           </div>
         </main>

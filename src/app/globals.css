@@ -324,7 +324,7 @@ body {
 .hero-panel {
   position: relative;
   overflow: hidden;
-  min-height: 420px;
+  min-height: 350px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--color-border);
@@ -468,7 +468,6 @@ body {
 ═══════════════════════════════════════════════════════════════ */
 .achievements-section {
   padding: 18px 22px;
-  border-bottom: 1px solid var(--color-border);
 }
 
 .achievements-grid {
@@ -1972,14 +1971,11 @@ body {
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
 }
 
-/* ── Scrollable grid area inside ProjectsView ── */
+/* ── Grid area inside ProjectsView ── */
 .projects-view-scroll {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
   padding: 16px 22px 24px;
 }
 
@@ -2466,9 +2462,11 @@ body {
 .tech-item-extra-badge {
   font-family: var(--font-display);
   font-size: 6px;
+  /* smaller for compact button */
   color: var(--color-cyan);
   border: 1px solid var(--color-cyan);
-  padding: 2px 5px;
+  padding: 2px 4px;
+  /* tighter padding */
   border-radius: 2px;
   background: rgba(0, 217, 255, 0.1);
   letter-spacing: 0.5px;
@@ -2725,9 +2723,11 @@ body {
   .portfolio-columns {
     flex-direction: column;
   }
+
   .col-left {
     display: none;
   }
+
   .col-left.mobile-open {
     display: flex;
     position: absolute;
@@ -2736,20 +2736,23 @@ body {
     width: 300px;
     height: 100%;
     z-index: 100;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.8);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.8);
   }
+
   .mobile-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
     z-index: 99;
   }
+
   .top-bar {
     flex-wrap: wrap;
     justify-content: center;
     padding: 10px 40px 10px 10px;
     gap: 12px;
   }
+
   .mobile-menu-btn {
     display: block;
     position: absolute;
@@ -2762,6 +2765,7 @@ body {
     cursor: pointer;
     z-index: 10;
   }
+
   .achievements-grid,
   .skills-stats-row,
   .profile-stats-row,
@@ -2769,27 +2773,33 @@ body {
   .projects-grid-v2 {
     grid-template-columns: 1fr !important;
   }
+
   .skill-stat-card {
     border-right: none !important;
     border-bottom: 1px solid var(--color-border);
     padding-bottom: 14px;
     margin-bottom: 14px;
   }
+
   .skill-stat-card:last-child {
     border-bottom: none !important;
     padding-bottom: 0;
     margin-bottom: 0;
   }
+
   .skills-bottom-grid {
     grid-template-columns: 1fr !important;
   }
+
   .skills-header-area {
     padding: 20px 24px;
     margin: -22px -22px 14px -22px;
   }
+
   .loadout-box {
     align-items: flex-start;
   }
+
   .loadout-content {
     flex-direction: column;
     align-items: flex-start;
@@ -2797,7 +2807,9 @@ body {
 }
 
 @media (min-width: 901px) {
-  .mobile-menu-btn, .mobile-overlay {
+
+  .mobile-menu-btn,
+  .mobile-overlay {
     display: none;
   }
 }

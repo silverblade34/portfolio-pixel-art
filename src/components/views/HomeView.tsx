@@ -1,25 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
 import Image from 'next/image';
-import { portfolioData, Project } from '@/app/data';
-import { TabName, FilterTag } from '@/types';
+import { portfolioData } from '@/app/data';
+import { TabName } from '@/types';
 import { rarityLabel } from '@/lib/utils';
-import { ProjectCardV2 } from '@/components/ui/ProjectCardV2';
-import { ProjectModal } from '@/components/ui/ProjectModal';
 
 const techBadges = ['NestJS', 'TypeScript', 'PostgreSQL', 'AWS', 'Microservicios', 'Docker', 'Next.js', 'Flutter'];
-const filterTabs: FilterTag[] = ['TODOS', 'WEB APPS', 'HERRAMIENTAS', 'IOT/CLOUD', 'DISEÑO'];
 
 export function HomeView({ onTabChange }: { onTabChange: (t: TabName) => void }) {
   const { achievements } = portfolioData;
-  const [activeFilter, setActiveFilter] = useState<FilterTag>('TODOS');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  const filtered = portfolioData.projects.filter(p => {
-    if (activeFilter === 'TODOS') return true;
-    return p.filterTags.includes(activeFilter);
-  });
 
   return (
     <>
@@ -78,48 +68,6 @@ export function HomeView({ onTabChange }: { onTabChange: (t: TabName) => void })
           ))}
         </div>
       </div>
-
-      {/* PROYECTOS COMPLETOS */}
-      <div className="projects-section">
-        <div className="section-header" style={{ marginBottom: '8px' }}>
-          <span className="section-title">🗂️ PROYECTOS</span>
-        </div>
-        <p className="projects-view-desc" style={{ marginBottom: '14px' }}>
-          Explora mis proyectos personales. Cada uno demuestra diferentes habilidades y tecnologías.
-        </p>
-
-        <div className="filter-tabs">
-          {filterTabs.map(f => (
-            <button
-              key={f}
-              className={`filter-tab${activeFilter === f ? ' active' : ''}`}
-              onClick={() => setActiveFilter(f)}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
-        <div className="projects-grid-v2" style={{ padding: '0', marginTop: '16px' }}>
-          {filtered.map(p => (
-            <ProjectCardV2 key={p.id} project={p} onOpen={setSelectedProject} />
-          ))}
-          {/* New Project Card */}
-          <div className="project-card-new">
-            <div className="project-card-new-icon">+ </div>
-            <div className="project-card-new-title">Nuevo Proyecto</div>
-            <div className="project-card-new-desc">
-              Siempre construyendo algo genial...
-            </div>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--color-border-hl)' }}>{'</>'}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Modal */}
-      {selectedProject && (
-        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
-      )}
     </>
   );
 }
