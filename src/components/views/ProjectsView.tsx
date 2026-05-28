@@ -20,45 +20,42 @@ export function ProjectsView() {
 
   return (
     <div className="projects-view-v3">
-      {/* Compact Hero */}
-      <div className="hero-panel" style={{ minHeight: 'auto', flexShrink: 0 }}>
-        <div className="hero-bg">
-          <Image
-            src="/assets/personaje-mirando-ciudad.png"
-            alt="Marcos mirando la ciudad"
-            fill
-            sizes="100vw"
-            style={{ objectFit: 'cover', objectPosition: 'center 30%', imageRendering: 'pixelated' }}
-            priority
-          />
-        </div>
-        <div className="hero-overlay" />
-        <div className="hero-content" style={{ padding: '18px 24px 14px' }}>
-          <p className="hero-hello" style={{ margin: 0 }}>¡HOLA, SOY</p>
-          <h1 className="hero-name" style={{ fontSize: '22px', margin: '4px 0 0' }}>MARCOS PACHECO</h1>
-          <p className="hero-role" style={{ fontSize: '10px', margin: '4px 0 0' }}>FULL STACK ENGINEER</p>
+      {/* Hero identical to Skills */}
+      <div className="skills-header-area" style={{ margin: 0, padding: '30px 44px' }}>
+        <Image 
+          src="/assets/personaje-mirando-ciudad-alargado.png" 
+          alt="Hero Background" 
+          fill 
+          style={{ objectFit: 'cover', objectPosition: 'center', zIndex: 0, opacity: 0.8, imageRendering: 'pixelated' }} 
+          priority
+        />
+        {/* Overlays to blend into the main background */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to right, rgba(8,11,16,1) 0%, rgba(8,11,16,0.6) 40%, transparent 80%)', zIndex: 1 }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to top, rgba(8,11,16,1) 0%, transparent 50%)', zIndex: 1 }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(8,11,16,1) 0%, transparent 20%)', zIndex: 1 }} />
+        
+        <div className="skills-header-content">
+          <div className="skills-main-title">
+            <span className="skills-bolt">🗂️</span>
+            <h2>PROYECTOS</h2>
+          </div>
+          <p className="skills-main-desc">
+            Explora mis proyectos personales. Cada uno demuestra diferentes habilidades y tecnologías.
+          </p>
         </div>
       </div>
 
-      {/* Header + Filter tabs */}
-      <div style={{ padding: '14px 20px 12px', flexShrink: 0, borderBottom: '1px solid var(--color-border)' }}>
-        <div className="section-header" style={{ marginBottom: '6px' }}>
-          <span className="section-title">🗂️ PROYECTOS</span>
-        </div>
-        <p className="projects-view-desc" style={{ marginBottom: '12px' }}>
-          Explora mis proyectos personales. Cada uno demuestra diferentes habilidades y tecnologías.
-        </p>
-        <div className="filter-tabs">
-          {filterTabs.map(f => (
-            <button
-              key={f}
-              className={`filter-tab${activeFilter === f ? ' active' : ''}`}
-              onClick={() => setActiveFilter(f)}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
+      {/* Filter tabs moved outside the hero */}
+      <div className="filter-tabs" style={{ padding: '0 22px 16px', borderBottom: '1px solid var(--color-border)' }}>
+        {filterTabs.map(f => (
+          <button
+            key={f}
+            className={`filter-tab${activeFilter === f ? ' active' : ''}`}
+            onClick={() => setActiveFilter(f)}
+          >
+            {f}
+          </button>
+        ))}
       </div>
 
       {/* Grid scrollable area */}

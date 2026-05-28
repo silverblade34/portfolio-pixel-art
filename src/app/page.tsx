@@ -25,16 +25,22 @@ const menuItems: { tab: TabName; icon: string }[] = [
 // ─── MAIN COMPONENT ────────────────────────────────────────
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState<TabName>('INICIO');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleTabChange = (tab: TabName) => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+  };
 
   const renderCenter = () => {
     switch (activeTab) {
-      case 'INICIO': return <HomeView onTabChange={setActiveTab} />;
+      case 'INICIO': return <HomeView onTabChange={handleTabChange} />;
       case 'SOBRE MÍ': return <AboutView />;
       case 'HABILIDADES': return <SkillsView />;
       case 'PROYECTOS': return <ProjectsView />;
       case 'EXPERIENCIA': return <ExperienceView />;
       case 'CONTACTO': return <ContactView />;
-      default: return <HomeView onTabChange={setActiveTab} />;
+      default: return <HomeView onTabChange={handleTabChange} />;
     }
   };
 
@@ -43,7 +49,8 @@ export default function Portfolio() {
       <div className="portfolio-columns">
 
         {/* ── LEFT COLUMN ── */}
-        <aside className="col-left">
+        {mobileMenuOpen && <div className="mobile-overlay" onClick={() => setMobileMenuOpen(false)} />}
+        <aside className={`col-left${mobileMenuOpen ? ' mobile-open' : ''}`}>
           {/* Character card */}
           <div className="char-card">
             <Image
@@ -63,7 +70,7 @@ export default function Portfolio() {
               <div
                 key={tab}
                 className={`menu-item${activeTab === tab ? ' active' : ''}`}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => handleTabChange(tab)}
               >
                 <span className="menu-icon">{icon}</span>
                 {tab}
@@ -105,6 +112,7 @@ export default function Portfolio() {
         <main className="col-center">
           {/* Top bar */}
           <div className="top-bar">
+            <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>☰</button>
             <a href="#" className="top-bar-item">
               <span className="icon">📍</span> Lima, Perú
             </a>
