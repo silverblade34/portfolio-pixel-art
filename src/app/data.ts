@@ -316,19 +316,7 @@ export const portfolioData = {
         "APIs REST con Express, NestJS y TypeScript.",
       ],
       tech: ['NestJS', 'TypeScript', 'Express'],
-    },
-    {
-      company: "Opseli",
-      companyInitial: "O",
-      companyColor: "#f2c94c",
-      role: "Desarrollador Web",
-      date: "dic. 2021 – may. 2022",
-      isActive: false,
-      achievements: [
-        "Sistema de cotizaciones con Vue.js y Express.",
-      ],
-      tech: ['Vue.js', 'Express'],
-    },
+    }
   ],
 
   education: [

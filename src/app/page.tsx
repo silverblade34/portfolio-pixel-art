@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { portfolioData } from './data';
 
@@ -26,6 +26,25 @@ const menuItems: { tab: TabName; icon: string }[] = [
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState<TabName>('INICIO');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.3;
+    }
+  }, []);
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.play().catch(console.error);
+      } else {
+        audioRef.current.pause();
+      }
+      setIsMuted(!isMuted);
+    }
+  };
 
   const handleTabChange = (tab: TabName) => {
     setActiveTab(tab);
@@ -113,6 +132,9 @@ export default function Portfolio() {
           {/* Top bar */}
           <div className="top-bar">
             <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>☰</button>
+            <button onClick={toggleMute} className="top-bar-item" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', color: 'inherit' }}>
+              <span className="icon">{isMuted ? '🔇' : '🔊'}</span> {isMuted ? 'Play Música' : 'Mute Música'}
+            </button>
             <a href="#" className="top-bar-item">
               <span className="icon">📍</span> Lima, Perú
             </a>
@@ -127,7 +149,7 @@ export default function Portfolio() {
             </a>
           </div>
 
-          <div style={{ flex: 1, overflow: 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, overflow: ['PROYECTOS', 'EXPERIENCIA'].includes(activeTab) ? 'hidden' : 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             {renderCenter()}
           </div>
         </main>
@@ -136,6 +158,7 @@ export default function Portfolio() {
 
       <TerminalTyping />
       <div className="crt-overlay" />
+      <audio ref={audioRef} src="/musica-fondo-medieval.mp3" loop />
     </div>
   );
 }

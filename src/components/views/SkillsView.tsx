@@ -8,7 +8,7 @@ const LEGEND_ICON_SIZE = { width: 42, height: 18 };
 
 export function SkillsView() {
   const stats = [
-    { label: 'TOTAL DE TECNOLOGÍAS', value: '32', sub: 'tecnologías', sprite: '/assets/sprites/iconos-estadisticas-total-tecnologias.png' },
+    { label: 'TOTAL DE TECNOLOGÍAS', value: '+22', sub: 'tecnologías', sprite: '/assets/sprites/iconos-estadisticas-total-tecnologias.png' },
     { label: 'DOMINIO GENERAL', value: 'Avanzado', sub: 'en constante evolución', sprite: '/assets/sprites/iconos-estadistica-dominio-general.png' },
     { label: 'CATEGORÍAS', value: '4', sub: 'áreas principales', sprite: '/assets/sprites/iconos-estadistica-categoria.png' },
     { label: 'FILOSOFÍA', value: 'Aprender, construir', sub: 'y compartir', sprite: '/assets/sprites/iconos-estadistica-filosofia.png' },
