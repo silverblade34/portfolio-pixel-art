@@ -482,18 +482,16 @@ function ProjectListCard({ project, isSelected, onSelect }: { project: Project; 
 // ─── PROJECTS VIEW ─────────────────────────────────────────
 function ProjectsView() {
   const [activeFilter, setActiveFilter] = useState<FilterTag>('TODOS');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(portfolioData.projects.find(p => p.id === 'screenforge') || null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const filtered = portfolioData.projects.filter(p => {
     if (activeFilter === 'TODOS') return true;
     return p.filterTags.includes(activeFilter);
   });
 
-  const effectiveSelected = filtered.find(p => p.id === selectedProject?.id) ?? filtered[0];
-
   return (
     <div className="projects-view-v3">
-      {/* Shortened Hero from HomeView */}
+      {/* Compact Hero */}
       <div className="hero-panel" style={{ minHeight: 'auto', flexShrink: 0 }}>
         <div className="hero-bg">
           <Image
@@ -506,17 +504,21 @@ function ProjectsView() {
           />
         </div>
         <div className="hero-overlay" />
-        <div className="hero-content" style={{ padding: '20px 24px 16px' }}>
+        <div className="hero-content" style={{ padding: '18px 24px 14px' }}>
           <p className="hero-hello" style={{ margin: 0 }}>¡HOLA, SOY</p>
-          <h1 className="hero-name" style={{ fontSize: '24px', margin: '4px 0 0' }}>MARCOS PACHECO</h1>
+          <h1 className="hero-name" style={{ fontSize: '22px', margin: '4px 0 0' }}>MARCOS PACHECO</h1>
           <p className="hero-role" style={{ fontSize: '10px', margin: '4px 0 0' }}>FULL STACK ENGINEER</p>
         </div>
       </div>
 
-      <div style={{ padding: '16px 20px 10px', flexShrink: 0, borderBottom: '1px solid var(--color-border)' }}>
-        <div className="section-header" style={{ marginBottom: '8px' }}>
+      {/* Header + Filter tabs */}
+      <div style={{ padding: '14px 20px 12px', flexShrink: 0, borderBottom: '1px solid var(--color-border)' }}>
+        <div className="section-header" style={{ marginBottom: '6px' }}>
           <span className="section-title">🗂️ PROYECTOS</span>
         </div>
+        <p className="projects-view-desc" style={{ marginBottom: '12px' }}>
+          Explora mis proyectos personales. Cada uno demuestra diferentes habilidades y tecnologías.
+        </p>
         <div className="filter-tabs">
           {filterTabs.map(f => (
             <button
@@ -530,28 +532,28 @@ function ProjectsView() {
         </div>
       </div>
 
-      {/* Split Layout: Left List / Right Detail */}
-      <div className="projects-split-body">
-        <div className="projects-list-col">
+      {/* Grid scrollable area */}
+      <div className="projects-view-scroll">
+        <div className="projects-grid-v2" style={{ padding: '0', marginTop: '0' }}>
           {filtered.map(p => (
-            <ProjectListCard 
-              key={p.id} 
-              project={p} 
-              isSelected={effectiveSelected?.id === p.id} 
-              onSelect={() => setSelectedProject(p)} 
-            />
+            <ProjectCardV2 key={p.id} project={p} onOpen={setSelectedProject} />
           ))}
-          <div className="project-card-new" style={{ margin: '0' }}>
-            <div className="project-card-new-icon">+</div>
+          {/* New Project Card */}
+          <div className="project-card-new">
+            <div className="project-card-new-icon">+ </div>
             <div className="project-card-new-title">Nuevo Proyecto</div>
-            <div className="project-card-new-desc">Siempre construyendo algo genial...</div>
+            <div className="project-card-new-desc">
+              Siempre construyendo algo genial...
+            </div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--color-border-hl)' }}>{'</>'}</div>
           </div>
         </div>
-        <div className="projects-detail-col">
-          {effectiveSelected && <ProjectDetailPanel project={effectiveSelected} />}
-        </div>
       </div>
+
+      {/* Modal */}
+      {selectedProject && (
+        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      )}
     </div>
   );
 }
@@ -783,7 +785,7 @@ export default function Portfolio() {
             </a>
           </div>
 
-          <div style={{ flex: 1, overflow: 'hidden', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, overflow: activeTab === 'PROYECTOS' ? 'hidden' : 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             {renderCenter()}
           </div>
         </main>

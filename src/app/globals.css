@@ -1963,9 +1963,22 @@ body {
 .projects-view-v3 {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
+
+/* ── Scrollable grid area inside ProjectsView ── */
+.projects-view-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 22px 24px;
+}
+
+.projects-view-scroll::-webkit-scrollbar { width: 3px; }
+.projects-view-scroll::-webkit-scrollbar-track { background: transparent; }
+.projects-view-scroll::-webkit-scrollbar-thumb { background: var(--color-border-hl); border-radius: 2px; }
 
 /* ── Split body ── */
 .projects-split-body {
