@@ -509,8 +509,7 @@ body {
 }
 
 .home-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 130px));
+  display: flex;
   gap: 6px;
   flex-shrink: 0;
   min-width: 0;
@@ -521,11 +520,11 @@ body {
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: default;
-  /* Keep cards compact — image fills column width */
+  flex-shrink: 0;
+  /* Respect inline width */
 }
 
 .home-stat-card img {
-  max-width: 130px;
   width: 100%;
 }
 
@@ -542,12 +541,13 @@ body {
   align-items: flex-end;
   flex-shrink: 0;
   gap: 0;
-  margin-left: auto; /* push to far right */
+  margin-left: auto;
+  position: relative;
 }
 
 .fauno-character {
   flex-shrink: 0;
-  filter: drop-shadow(0 4px 14px rgba(0,0,0,0.8));
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.8));
   transition: transform 0.25s ease;
 }
 
@@ -557,14 +557,16 @@ body {
 
 /* ── Dialog bubble — sits to the LEFT of fauno, bottom-aligned ── */
 .fauno-dialog {
-  position: relative;
-  margin-bottom: 46px;   /* lift it higher */
-  margin-right: -12px;    /* pull it closer so tail touches fauno head */
-  width: 215px;
-  height: 110px;
+  position: absolute;
+  right: 110px;
+  /* offset by fauno width minus overlap */
+  bottom: 84px;
+  /* lift to head level */
+  width: 245px;
+  height: 125px;
   flex-shrink: 0;
   animation: dialog-enter 0.35s ease forwards;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
   z-index: 10;
 }
 
@@ -576,31 +578,54 @@ body {
   position: absolute;
   inset: 0;
   z-index: 0;
-  transform: scaleX(-1); /* Mirror effect: tail points right */
+  transform: scaleX(-1);
+  /* Mirror effect: tail points right */
 }
 
 .fauno-dialog-content {
   position: relative;
   z-index: 1;
-  padding: 12px 14px 20px 16px;
+  padding: 14px 18px 32px 18px;
+  /* increased bottom padding to lift the button higher inside the new taller box */
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 @keyframes dialog-enter {
-  from { opacity: 0; transform: translateY(10px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes dialog-exit {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to   { opacity: 0; transform: translateY(10px) scale(0.97); }
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
 }
 
 @keyframes fauno-pulse {
-  0%, 100% { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)) drop-shadow(0 0 0 rgba(242,201,76,0)); }
-  50%       { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)) drop-shadow(0 0 8px rgba(242,201,76,0.3)); }
+
+  0%,
+  100% {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 0 rgba(242, 201, 76, 0));
+  }
+
+  50% {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 8px rgba(242, 201, 76, 0.3));
+  }
 }
 
 .fauno-dialog {
@@ -622,16 +647,21 @@ body {
   z-index: 10;
 }
 
-.fauno-dialog-close:hover { color: #fff; }
+.fauno-dialog-close:hover {
+  color: #fff;
+}
 
 .fauno-dialog-text {
   font-family: var(--font-pixel);
   font-size: 14.5px;
-  color: #1a1a0e; /* Dark text to contrast with the light paper background */
+  color: #1a1a0e;
+  /* Dark text to contrast with the light paper background */
   line-height: 1.25;
   letter-spacing: -0.01em;
-  margin: 0 0 auto 0; /* push the button to the bottom */
-  padding-right: 16px; /* space for close button */
+  margin: 0 0 auto 0;
+  /* push the button to the bottom */
+  padding-right: 16px;
+  /* space for close button */
   padding-top: 4px;
   min-height: 3.5em;
   font-weight: bold;
@@ -640,18 +670,33 @@ body {
 /* Blinking cursor */
 .fauno-cursor {
   display: inline-block;
-  color: #8c6a2c; /* Darker gold for light background */
+  color: #8c6a2c;
+  /* Darker gold for light background */
   animation: blink-cursor 0.7s step-end infinite;
 }
 
 @keyframes blink-cursor {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 @keyframes btn-appear {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Play button */
@@ -668,16 +713,18 @@ body {
   cursor: pointer;
   border: none;
   transition: background 0.15s, box-shadow 0.15s;
-  box-shadow: 0 0 12px rgba(242,201,76,0.3);
+  box-shadow: 0 0 12px rgba(242, 201, 76, 0.3);
   animation: btn-appear 0.3s ease;
 }
 
 .fauno-dialog-btn:hover {
   background: #ffe97a;
-  box-shadow: 0 0 20px rgba(242,201,76,0.5);
+  box-shadow: 0 0 20px rgba(242, 201, 76, 0.5);
 }
 
-.fauno-dialog-play { font-size: 10px; }
+.fauno-dialog-play {
+  font-size: 10px;
+}
 
 .fauno-dialog-wave {
   font-size: 8px;
@@ -689,7 +736,8 @@ body {
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .home-stats-grid {
-    grid-template-columns: repeat(3, minmax(0, 130px));
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .home-stats-row {
@@ -708,8 +756,9 @@ body {
   }
 
   .home-stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    flex-wrap: wrap;
     width: 100%;
+    justify-content: center;
   }
 
   .fauno-column {
@@ -2161,45 +2210,283 @@ body {
 /* ═══════════════════════════════════════════════════════════════
    ABOUT VIEW
 ═══════════════════════════════════════════════════════════════ */
-.about-section-card {
+.about-layout {
+  display: flex;
+  gap: 20px;
+  padding: 22px;
+  align-items: flex-start;
+}
+
+.about-col-left {
+  flex: 7.2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.about-col-right {
+  flex: 2.8;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-section-header {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: var(--color-text-dim);
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-icon {
+  font-size: 14px;
+}
+
+.about-card {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  padding: 18px;
+  border: 1px solid rgba(242, 201, 76, 0.4);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.about-label {
-  font-family: var(--font-display);
-  font-size: 9.8px;
-  color: var(--color-text);
-  margin-bottom: 14px;
+/* ── SOBRE MI Intro ── */
+.about-intro-card {
+  display: flex;
 }
 
-.about-paragraph {
+.about-intro-image {
+  position: relative;
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.about-intro-text {
+  flex: 1;
   font-family: var(--font-pixel);
-  font-size: 18.2px;
+  font-size: 17px !important;
   color: var(--color-text-dim);
-  line-height: 1.6;
-  margin-bottom: 10px;
+  line-height: 1.2;
+  padding: 18px 22px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.about-edu-inst {
+.about-intro-text p {
+  margin: 0;
+}
+
+.highlight-blue {
+  color: #4dc4e6;
+}
+
+.highlight-green {
+  color: #6db14a;
+}
+
+.highlight-yellow {
+  color: #f2c94c;
+}
+
+.about-define-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.about-define-card {
+  line-height: 0;
+  display: flex;
+}
+
+/* ── MI MISION ── */
+.about-mission-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  min-height: 120px;
+  overflow: hidden;
+}
+
+.about-mission-text {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-pixel);
+  font-size: 17px;
+  color: var(--color-text-dim);
+  line-height: 1.2;
+  max-width: 65%;
+}
+
+.about-mission-image {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  z-index: 1;
+}
+
+.about-mission-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--color-bg-card) 0%, transparent 60%);
+  z-index: 2;
+}
+
+/* ── ENFOQUE ── */
+.about-focus-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 8px;
+}
+
+.about-focus-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.about-focus-text {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  color: var(--color-text-dim);
+  line-height: 1.2;
+}
+
+/* ── FUERA DEL CÓDIGO ── */
+.about-hobbies-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 16px;
+  gap: 16px 10px;
+  justify-items: center;
+}
+
+.about-hobbies-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  width: 100%;
+}
+
+.about-hobby-icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-hobby-text {
   font-family: var(--font-display);
-  font-size: 10.4px;
+  font-size: 8px !important;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+}
+
+/* ── ESTADISTICAS ── */
+.about-stats-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 10px;
+}
+
+.about-stats-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.about-stats-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.about-stats-text {
+  font-family: var(--font-display);
+  font-size: 8px !important;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.about-stats-value {
+  font-family: var(--font-display);
+  font-size: 14px;
   color: #fff;
-  margin-bottom: 5px;
 }
 
-.about-edu-degree {
+.about-stats-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
   font-family: var(--font-display);
-  font-size: 9.1px;
-  color: var(--color-cyan);
-  margin-bottom: 3px;
+  font-size: 12px;
+  color: var(--color-text-dim);
+  letter-spacing: 0.1em;
 }
 
-.about-edu-period {
-  font-family: var(--font-pixel);
-  font-size: 16.9px;
-  color: var(--color-text-dim);
+/* ── RESPONSIVE ABOUT ── */
+@media (max-width: 1150px) {
+  .about-layout {
+    flex-direction: column;
+  }
+
+  .about-col-left,
+  .about-col-right {
+    flex: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 800px) {
+  .about-define-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-intro-card {
+    flex-direction: column;
+  }
+
+  .about-intro-image {
+    width: 100%;
+    height: 250px;
+  }
+
+  .about-intro-text {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 500px) {
+  .about-mission-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-hobbies-card {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════

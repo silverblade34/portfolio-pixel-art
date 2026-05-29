@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { portfolioData } from '@/app/data';
 
-type ExpTab = 'MAPA' | 'LINEA' | 'LOGROS';
+type ExpTab = 'MAPA' | 'LINEA';
 
 // Map node positions (% of container width/height)
 const mapNodes = [
@@ -204,7 +204,7 @@ export function ExperienceView() {
 
       {/* ── Tab bar ── */}
       <div className="exp-tab-bar">
-        {(['MAPA', 'LINEA', 'LOGROS'] as ExpTab[]).map(tab => (
+        {(['MAPA', 'LINEA'] as ExpTab[]).map(tab => (
           <button
             key={tab}
             className={`exp-tab${activeTab === tab ? ' active' : ''}`}
@@ -464,20 +464,6 @@ export function ExperienceView() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* ━━━━  LOGROS  ━━━━ */}
-        {activeTab === 'LOGROS' && (
-          <div className="exp-logros-wrap">
-            {portfolioData.achievements.map((a, i) => (
-              <div key={i} className={`achievement-card rarity-${a.rarity} exp-logro-card`}>
-                <span className="achievement-icon">{a.icon}</span>
-                <span className={`achievement-rarity rarity-${a.rarity}`}>{a.rarity}</span>
-                <span className="achievement-title">{a.title}</span>
-                <span className="achievement-desc">{a.desc}</span>
-              </div>
-            ))}
           </div>
         )}
       </div>

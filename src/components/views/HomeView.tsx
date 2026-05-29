@@ -8,12 +8,12 @@ import { TabName } from '@/types';
 const techBadges = ['NestJS', 'TypeScript', 'PostgreSQL', 'AWS', 'Microservicios', 'Docker', 'Next.js', 'Flutter'];
 
 const statsCards = [
-  { sprite: '/assets/sprites/home/card-logros-estadisticas-proyectos-construidos.png', alt: 'Proyectos construidos' },
-  { sprite: '/assets/sprites/home/card-logros-estadisticas-anos-experiencia.png',      alt: 'Años de experiencia' },
-  { sprite: '/assets/sprites/home/card-logros-estadisticas-usuarios-impactados.png',   alt: 'Usuarios impactados' },
-  { sprite: '/assets/sprites/home/card-logros-estadisticas-aprendizaje-constante.png', alt: 'Aprendizaje constante' },
-  { sprite: '/assets/sprites/home/card-logros-estadisticas-proyectos-produccion.png',  alt: 'Proyectos en producción' },
-  { sprite: '/assets/sprites/home/card-logros-estadisticas-desafios-superados.png',    alt: 'Desafíos superados' },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-proyectos-construidos.png', alt: 'Proyectos construidos', width: 165 },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-anos-experiencia.png', alt: 'Años de experiencia', width: 165 },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-usuarios-impactados.png', alt: 'Usuarios impactados', width: 165 },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-aprendizaje-constante.png', alt: 'Aprendizaje constante', width: 165 },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-proyectos-produccion.png', alt: 'Proyectos en producción', width: 160 },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-desafios-superados.png', alt: 'Desafíos superados', width: 160 },
 ];
 
 const FAUNO_FULL_TEXT = 'Te invito a escuchar una composición mía. 🎵';
@@ -27,14 +27,14 @@ export function HomeView({
   onPlayMusic?: () => void;
 }) {
   // Dialog state only — fauno is always visible
-  const [dialogOpen, setDialogOpen]     = useState(false);  // controls render
+  const [dialogOpen, setDialogOpen] = useState(false);  // controls render
   const [dialogFading, setDialogFading] = useState(false);  // controls fade-out CSS
-  const [typedText, setTypedText]       = useState('');
-  const [textDone, setTextDone]         = useState(false);
+  const [typedText, setTypedText] = useState('');
+  const [textDone, setTextDone] = useState(false);
 
   /* ── Delayed dialog entrance (1.8s after mount) ── */
   useEffect(() => {
-    const showId = setTimeout(() => setDialogOpen(true), 1800);
+    const showId = setTimeout(() => setDialogOpen(true), 1200);
     return () => clearTimeout(showId);
   }, []);
 
@@ -118,11 +118,11 @@ export function HomeView({
           {/* 6 stat cards */}
           <div className="home-stats-grid">
             {statsCards.map((card, i) => (
-              <div key={i} className="home-stat-card">
+              <div key={i} className="home-stat-card" style={{ width: card.width }}>
                 <Image
                   src={card.sprite}
                   alt={card.alt}
-                  width={130}
+                  width={card.width}
                   height={170}
                   style={{ width: '100%', height: 'auto', imageRendering: 'pixelated', display: 'block' }}
                 />
