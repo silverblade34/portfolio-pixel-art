@@ -29,7 +29,7 @@ const assetsToPreload = [
   '/assets/sprites/experiencia/card-leyenda.png',
   '/assets/sprites/experiencia/card-proxima-aventura.png',
   '/assets/sprites/experiencia/personaje-inicio-aventura.png',
-  
+
   // Experience Nodes/Flags
   '/assets/sprites/experiencia/experiencia-bandera-1.png',
   '/assets/sprites/experiencia/experiencia-bandera-2.png',
@@ -197,7 +197,7 @@ export default function Portfolio() {
               <span className="icon">in</span> marcos-pacheco-tacay
             </a>
             <a href={portfolioData.personalInfo.portfolio} target="_blank" rel="noreferrer" className="top-bar-item">
-              <span className="icon">🌐</span> maquiadev.com
+              <span className="icon">🌐</span> marcospacheco.online
             </a>
           </div>
 

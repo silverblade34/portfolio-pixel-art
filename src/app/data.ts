@@ -41,7 +41,7 @@ export const portfolioData = {
     phone: "917695853",
     email: "mpacheco.tacay@gmail.com",
     linkedin: "https://www.linkedin.com/in/marcos-pacheco-tacay-674206249",
-    portfolio: "https://maquiadev.com/",
+    portfolio: "https://marcospacheco.online/",
     level: 99,
     hp: 999,
     mp: 999,
