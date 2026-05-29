@@ -98,6 +98,13 @@ export default function Portfolio() {
     }
   };
 
+  const playMusic = () => {
+    if (audioRef.current && isMuted) {
+      audioRef.current.play().catch(console.error);
+      setIsMuted(false);
+    }
+  };
+
   const handleTabChange = (tab: TabName) => {
     setActiveTab(tab);
     setMobileMenuOpen(false);
@@ -105,13 +112,13 @@ export default function Portfolio() {
 
   const renderCenter = () => {
     switch (activeTab) {
-      case 'INICIO': return <HomeView onTabChange={handleTabChange} />;
+      case 'INICIO': return <HomeView onTabChange={handleTabChange} onPlayMusic={playMusic} />;
       case 'SOBRE MÍ': return <AboutView />;
       case 'HABILIDADES': return <SkillsView />;
       case 'PROYECTOS': return <ProjectsView />;
       case 'EXPERIENCIA': return <ExperienceView />;
       case 'CONTACTO': return <ContactView />;
-      default: return <HomeView onTabChange={handleTabChange} />;
+      default: return <HomeView onTabChange={handleTabChange} onPlayMusic={playMusic} />;
     }
   };
 

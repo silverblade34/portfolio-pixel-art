@@ -466,6 +466,260 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   HOME VIEW ROOT
+═══════════════════════════════════════════════════════════════ */
+.home-view-root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ── Stats & Achievements Section ── */
+.home-stats-section {
+  padding: 16px 16px 20px;
+  position: relative;
+}
+
+.home-stats-header {
+  margin-bottom: 18px;
+}
+
+.home-stats-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: var(--color-gold);
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.home-stats-sub {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  color: var(--color-text-dim);
+  margin: 0;
+}
+
+/* ── Stats row: cards on left, fauno on right ── */
+.home-stats-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.home-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 130px));
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.home-stat-card {
+  line-height: 0;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+  /* Keep cards compact — image fills column width */
+}
+
+.home-stat-card img {
+  max-width: 130px;
+  width: 100%;
+}
+
+
+.home-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Fauno column: dialog to the LEFT, character to the RIGHT ── */
+.fauno-column {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 0;
+  margin-left: auto; /* push to far right */
+}
+
+.fauno-character {
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 14px rgba(0,0,0,0.8));
+  transition: transform 0.25s ease;
+}
+
+.fauno-column:hover .fauno-character {
+  transform: translateY(-5px);
+}
+
+/* ── Dialog bubble — sits to the LEFT of fauno, bottom-aligned ── */
+.fauno-dialog {
+  position: relative;
+  margin-bottom: 46px;   /* lift it higher */
+  margin-right: -12px;    /* pull it closer so tail touches fauno head */
+  width: 215px;
+  height: 110px;
+  flex-shrink: 0;
+  animation: dialog-enter 0.35s ease forwards;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+  z-index: 10;
+}
+
+.fauno-dialog.fauno-dialog-fading {
+  animation: dialog-exit 0.35s ease forwards;
+}
+
+.fauno-dialog-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transform: scaleX(-1); /* Mirror effect: tail points right */
+}
+
+.fauno-dialog-content {
+  position: relative;
+  z-index: 1;
+  padding: 12px 14px 20px 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes dialog-enter {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dialog-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(10px) scale(0.97); }
+}
+
+@keyframes fauno-pulse {
+  0%, 100% { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)) drop-shadow(0 0 0 rgba(242,201,76,0)); }
+  50%       { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)) drop-shadow(0 0 8px rgba(242,201,76,0.3)); }
+}
+
+.fauno-dialog {
+  animation: dialog-enter 0.35s ease forwards, fauno-pulse 3s ease-in-out infinite 0.35s;
+}
+
+.fauno-dialog-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--color-text-dim);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.15s;
+  z-index: 10;
+}
+
+.fauno-dialog-close:hover { color: #fff; }
+
+.fauno-dialog-text {
+  font-family: var(--font-pixel);
+  font-size: 14.5px;
+  color: #1a1a0e; /* Dark text to contrast with the light paper background */
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0 0 auto 0; /* push the button to the bottom */
+  padding-right: 16px; /* space for close button */
+  padding-top: 4px;
+  min-height: 3.5em;
+  font-weight: bold;
+}
+
+/* Blinking cursor */
+.fauno-cursor {
+  display: inline-block;
+  color: #8c6a2c; /* Darker gold for light background */
+  animation: blink-cursor 0.7s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes btn-appear {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Play button */
+.fauno-dialog-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: var(--color-gold);
+  color: #000;
+  font-family: var(--font-display);
+  font-size: 7.5px;
+  padding: 7px 10px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, box-shadow 0.15s;
+  box-shadow: 0 0 12px rgba(242,201,76,0.3);
+  animation: btn-appear 0.3s ease;
+}
+
+.fauno-dialog-btn:hover {
+  background: #ffe97a;
+  box-shadow: 0 0 20px rgba(242,201,76,0.5);
+}
+
+.fauno-dialog-play { font-size: 10px; }
+
+.fauno-dialog-wave {
+  font-size: 8px;
+  opacity: 0.7;
+  letter-spacing: 1px;
+  margin-left: auto;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .home-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 130px));
+  }
+
+  .home-stats-row {
+    flex-wrap: wrap;
+  }
+
+  .fauno-column {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-stats-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+  }
+
+  .fauno-column {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
    CENTER – ACHIEVEMENTS / LOGROS
 ═══════════════════════════════════════════════════════════════ */
 .achievements-section {

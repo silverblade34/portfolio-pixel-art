@@ -1,19 +1,72 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { portfolioData } from '@/app/data';
 import { TabName } from '@/types';
-import { rarityLabel } from '@/lib/utils';
 
 const techBadges = ['NestJS', 'TypeScript', 'PostgreSQL', 'AWS', 'Microservicios', 'Docker', 'Next.js', 'Flutter'];
 
-export function HomeView({ onTabChange }: { onTabChange: (t: TabName) => void }) {
-  const { achievements } = portfolioData;
+const statsCards = [
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-proyectos-construidos.png', alt: 'Proyectos construidos' },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-anos-experiencia.png',      alt: 'Años de experiencia' },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-usuarios-impactados.png',   alt: 'Usuarios impactados' },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-aprendizaje-constante.png', alt: 'Aprendizaje constante' },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-proyectos-produccion.png',  alt: 'Proyectos en producción' },
+  { sprite: '/assets/sprites/home/card-logros-estadisticas-desafios-superados.png',    alt: 'Desafíos superados' },
+];
 
+const FAUNO_FULL_TEXT = 'Te invito a escuchar una composición mía. 🎵';
+const TYPEWRITER_SPEED_MS = 70;
+
+export function HomeView({
+  onTabChange,
+  onPlayMusic,
+}: {
+  onTabChange: (t: TabName) => void;
+  onPlayMusic?: () => void;
+}) {
+  // Dialog state only — fauno is always visible
+  const [dialogOpen, setDialogOpen]     = useState(false);  // controls render
+  const [dialogFading, setDialogFading] = useState(false);  // controls fade-out CSS
+  const [typedText, setTypedText]       = useState('');
+  const [textDone, setTextDone]         = useState(false);
+
+  /* ── Delayed dialog entrance (1.8s after mount) ── */
+  useEffect(() => {
+    const showId = setTimeout(() => setDialogOpen(true), 1800);
+    return () => clearTimeout(showId);
+  }, []);
+
+  /* ── Typewriter — runs once dialog opens ── */
+  useEffect(() => {
+    if (!dialogOpen || dialogFading) return;
+    let i = 0;
+    const id = setInterval(() => {
+      i += 1;
+      setTypedText(FAUNO_FULL_TEXT.slice(0, i));
+      if (i >= FAUNO_FULL_TEXT.length) {
+        clearInterval(id);
+        setTextDone(true);
+      }
+    }, TYPEWRITER_SPEED_MS);
+    return () => clearInterval(id);
+  }, [dialogOpen, dialogFading]);
+
+  /* ── Smooth dialog close ── */
+  const closeDialog = (playMusic: boolean) => {
+    if (playMusic) onPlayMusic?.();
+    setDialogFading(true);
+    setTimeout(() => {
+      setDialogOpen(false);
+      setDialogFading(false);
+    }, 400);
+  };
 
   return (
-    <>
-      {/* Hero */}
+    <div className="home-view-root">
+
+      {/* ── Hero ── */}
       <div className="hero-panel">
         <div className="hero-bg">
           <Image
@@ -52,22 +105,83 @@ export function HomeView({ onTabChange }: { onTabChange: (t: TabName) => void })
         </div>
       </div>
 
-      {/* LOGROS / Achievements */}
-      <div className="achievements-section">
-        <div className="section-header">
-          <span className="section-title">🏆 LOGROS</span>
+      {/* ── Stats + Fauno row ── */}
+      <div className="home-stats-section">
+        <div className="home-stats-header">
+          <span className="home-stats-title">🏆 LOGROS &amp; ESTADÍSTICAS</span>
+          <p className="home-stats-sub">Hitos alcanzados en este viaje épico como desarrollador</p>
         </div>
-        <div className="achievements-grid">
-          {achievements.map((a, i) => (
-            <div key={i} className={`achievement-card rarity-${a.rarity}`}>
-              <span className="achievement-icon">{a.icon}</span>
-              <span className={`achievement-rarity rarity-${a.rarity}`}>{rarityLabel(a.rarity)}</span>
-              <span className="achievement-title">{a.title}</span>
-              <span className="achievement-desc">{a.desc}</span>
+
+        {/* cards + fauno in the same flex row */}
+        <div className="home-stats-row">
+
+          {/* 6 stat cards */}
+          <div className="home-stats-grid">
+            {statsCards.map((card, i) => (
+              <div key={i} className="home-stat-card">
+                <Image
+                  src={card.sprite}
+                  alt={card.alt}
+                  width={130}
+                  height={170}
+                  style={{ width: '100%', height: 'auto', imageRendering: 'pixelated', display: 'block' }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Fauno — always visible, dialog is the only thing that toggles */}
+          <div className="fauno-column">
+
+            {/* Dialog bubble — only shown when dialogOpen */}
+            {dialogOpen && (
+              <div className={`fauno-dialog${dialogFading ? ' fauno-dialog-fading' : ''}`}>
+                <div className="fauno-dialog-bg">
+                  <Image
+                    src="/assets/sprites/home/dialogo-fauno-en-blanco.png"
+                    alt="Dialog bubble"
+                    fill
+                    sizes="260px"
+                    style={{ objectFit: 'fill', imageRendering: 'pixelated' }}
+                  />
+                </div>
+                <div className="fauno-dialog-content">
+                  <button
+                    className="fauno-dialog-close"
+                    onClick={() => closeDialog(false)}
+                    aria-label="Cerrar"
+                  >
+                    ×
+                  </button>
+                  <p className="fauno-dialog-text">
+                    {typedText}
+                    {!textDone && <span className="fauno-cursor">▋</span>}
+                  </p>
+                  {textDone && (
+                    <button className="fauno-dialog-btn" onClick={() => closeDialog(true)}>
+                      <span className="fauno-dialog-play">▶</span>
+                      ESCUCHAR AHORA
+                      <span className="fauno-dialog-wave">▂▃▅▇▅▃▂</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Fauno character — permanent */}
+            <div className="fauno-character">
+              <Image
+                src="/assets/sprites/home/fauno.png"
+                alt="Fauno – Compositor"
+                width={130}
+                height={170}
+                style={{ imageRendering: 'pixelated', width: '130px', height: 'auto' }}
+              />
             </div>
-          ))}
+          </div>
+
         </div>
       </div>
-    </>
+    </div>
   );
 }
