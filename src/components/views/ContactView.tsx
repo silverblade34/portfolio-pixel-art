@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { portfolioData } from '@/app/data';
 
+
+
 export function ContactView() {
   const { personalInfo } = portfolioData;
 
@@ -69,43 +71,61 @@ export function ContactView() {
     }
   };
 
-  const otherWaysToConnect = [
+  const channels = [
     {
       icon: '/assets/sprites/contacto/otra-forma-conectar-correo.png',
       label: 'CORREO',
       value: personalInfo.email,
-      href: `mailto:${personalInfo.email}`
+      href: `mailto:${personalInfo.email}`,
+      badge: 'RESPUESTA < 24H',
+      subLabel: 'Respuesta garantizada',
+      theme: 'blue'
     },
     {
       icon: '/assets/sprites/contacto/otra-forma-conectar-telefono.png',
-      label: 'TELÉFONO',
+      label: 'TELEFONO',
       value: personalInfo.phone,
-      href: null
+      href: `tel:${personalInfo.phone}`,
+      badge: 'DISPONIBLE',
+      subLabel: 'Lima, Perú',
+      theme: 'green'
     },
     {
       icon: '/assets/sprites/contacto/otra-forma-conectar-ubicacion.png',
       label: 'UBICACIÓN',
       value: 'Lima, Perú',
-      href: null
+      href: null,
+      badge: 'GMT-5',
+      subLabel: 'Zona horaria',
+      theme: 'purple'
     },
     {
       icon: '/assets/sprites/contacto/otra-forma-conectar-linkedin.png',
       label: 'LINKEDIN',
       value: 'marcos-pacheco-tacay',
-      href: personalInfo.linkedin
+      href: personalInfo.linkedin,
+      badge: 'CONECTADOS',
+      subLabel: 'Conecta conmigo',
+      theme: 'blue'
     },
     {
       icon: '/assets/sprites/contacto/otra-forma-conectar-portafolio.png',
       label: 'PORTAFOLIO',
       value: 'marcospacheco.online',
-      href: personalInfo.portfolio
+      href: personalInfo.portfolio,
+      badge: 'ACTUALIZADO',
+      subLabel: 'Visita mi trabajo',
+      theme: 'green'
     },
     {
       icon: '/assets/sprites/contacto/otra-forma-conectar-disponibilidad.png',
       label: 'DISPONIBILIDAD',
       value: 'Full-time / Remoto',
-      href: null
-    },
+      href: null,
+      badge: 'ESTADO',
+      subLabel: 'Disponibilidad inmediata',
+      theme: 'purple'
+    }
   ];
 
   return (
@@ -155,7 +175,15 @@ export function ContactView() {
             {status === 'success' && (
               <div className="contact-status-dialog-overlay">
                 <div className="contact-status-dialog">
-                  <div className="contact-status-icon">🎉</div>
+                  <div className="contact-status-icon">
+                    <Image
+                      src="/assets/sprites/iconos-estadisticas-total-tecnologias.png"
+                      alt="Trophy Sprite"
+                      width={48}
+                      height={48}
+                      style={{ objectFit: 'contain', imageRendering: 'pixelated', display: 'block' }}
+                    />
+                  </div>
                   <h4 className="contact-status-title">¡MISIÓN CUMPLIDA!</h4>
                   <p className="contact-status-text">
                     Tu mensaje ha sido enviado con éxito al mensajero. ¡Hablaremos muy pronto!
@@ -259,54 +287,49 @@ export function ContactView() {
                 </>
               )}
             </button>
-
-            <div className="contact-form-footer-note">* Campos obligatorios</div>
           </form>
         </div>
 
         {/* RIGHT COLUMN: OTHER WAYS */}
         <div className="contact-other-col">
           <div className="contact-other-frame">
-            <h3 className="contact-col-title color-purple" style={{ textAlign: 'center', marginBottom: '20px' }}>OTRAS FORMAS DE CONECTAR</h3>
+            <h3 className="contact-channels-title">✦ CANALES DE COMUNICACIÓN ✦</h3>
 
-            <div className="contact-other-grid-container">
-              {otherWaysToConnect.slice(0, 3).map((item, i) => (
-                <div key={i} className="contact-other-item">
-                  <div className="contact-other-icon">
-                    <Image src={item.icon} alt={item.label} fill style={{ objectFit: 'contain', imageRendering: 'pixelated' }} />
-                  </div>
-                  <div className="contact-other-label">{item.label}</div>
-                  <div className="contact-other-value">
-                    {item.href ? (
-                      <a href={item.href} target="_blank" rel="noreferrer">{item.value}</a>
-                    ) : (
-                      <span>{item.value}</span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <div className="contact-channels-grid">
+              {channels.map((item, i) => {
+                return (
+                  <div key={i} className={`contact-channel-card theme-${item.theme}`}>
+                    {/* Top Row: Icon + Badge/Label */}
+                    <div className="contact-channel-header">
+                      <div className="contact-channel-icon-wrap">
+                        <Image
+                          src={item.icon}
+                          alt={item.label}
+                          width={26}
+                          height={26}
+                          style={{ objectFit: 'contain', imageRendering: 'pixelated' }}
+                        />
+                      </div>
+                      <div className="contact-channel-header-text">
+                        <span className="contact-channel-badge">{item.badge}</span>
+                        <h4 className="contact-channel-label">{item.label}</h4>
+                      </div>
+                    </div>
 
-            <div className="contact-divider-line">
-              <div className="contact-divider-diamond"></div>
-            </div>
-
-            <div className="contact-other-grid-container">
-              {otherWaysToConnect.slice(3, 6).map((item, i) => (
-                <div key={i} className="contact-other-item">
-                  <div className="contact-other-icon">
-                    <Image src={item.icon} alt={item.label} fill style={{ objectFit: 'contain', imageRendering: 'pixelated' }} />
+                    {/* Bottom part: Value + SubLabel */}
+                    <div className="contact-channel-value">
+                      {item.href ? (
+                        <a href={item.href} target="_blank" rel="noreferrer">
+                          {item.value}
+                        </a>
+                      ) : (
+                        <span>{item.value}</span>
+                      )}
+                    </div>
+                    <div className="contact-channel-desc">{item.subLabel}</div>
                   </div>
-                  <div className="contact-other-label">{item.label}</div>
-                  <div className="contact-other-value">
-                    {item.href ? (
-                      <a href={item.href} target="_blank" rel="noreferrer">{item.value}</a>
-                    ) : (
-                      <span>{item.value}</span>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
