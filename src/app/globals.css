@@ -506,13 +506,18 @@ body {
   align-items: flex-end;
   gap: 10px;
   justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .home-stats-grid {
   display: flex;
+  align-items: flex-end;
   gap: 6px;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  flex-grow: 1;
+  max-width: 100%;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 .home-stat-card {
@@ -541,8 +546,14 @@ body {
   align-items: flex-end;
   flex-shrink: 0;
   gap: 0;
-  margin-left: auto;
+  margin-left: 0;
   position: relative;
+}
+
+@media (min-width: 1280px) {
+  .fauno-column {
+    margin-left: auto;
+  }
 }
 
 .fauno-character {

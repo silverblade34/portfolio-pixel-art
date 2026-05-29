@@ -115,7 +115,7 @@ export function HomeView({
         {/* cards + fauno in the same flex row */}
         <div className="home-stats-row">
 
-          {/* 6 stat cards */}
+          {/* 6 stat cards + Fauno in the same grid */}
           <div className="home-stats-grid">
             {statsCards.map((card, i) => (
               <div key={i} className="home-stat-card" style={{ width: card.width }}>
@@ -128,55 +128,55 @@ export function HomeView({
                 />
               </div>
             ))}
-          </div>
 
-          {/* Fauno — always visible, dialog is the only thing that toggles */}
-          <div className="fauno-column">
+            {/* Fauno — always visible, dialog is the only thing that toggles */}
+            <div className="fauno-column">
 
-            {/* Dialog bubble — only shown when dialogOpen */}
-            {dialogOpen && (
-              <div className={`fauno-dialog${dialogFading ? ' fauno-dialog-fading' : ''}`}>
-                <div className="fauno-dialog-bg">
-                  <Image
-                    src="/assets/sprites/home/dialogo-fauno-en-blanco.png"
-                    alt="Dialog bubble"
-                    fill
-                    sizes="260px"
-                    style={{ objectFit: 'fill', imageRendering: 'pixelated' }}
-                  />
-                </div>
-                <div className="fauno-dialog-content">
-                  <button
-                    className="fauno-dialog-close"
-                    onClick={() => closeDialog(false)}
-                    aria-label="Cerrar"
-                  >
-                    ×
-                  </button>
-                  <p className="fauno-dialog-text">
-                    {typedText}
-                    {!textDone && <span className="fauno-cursor">▋</span>}
-                  </p>
-                  {textDone && (
-                    <button className="fauno-dialog-btn" onClick={() => closeDialog(true)}>
-                      <span className="fauno-dialog-play">▶</span>
-                      ESCUCHAR AHORA
-                      <span className="fauno-dialog-wave">▂▃▅▇▅▃▂</span>
+              {/* Dialog bubble — only shown when dialogOpen */}
+              {dialogOpen && (
+                <div className={`fauno-dialog${dialogFading ? ' fauno-dialog-fading' : ''}`}>
+                  <div className="fauno-dialog-bg">
+                    <Image
+                      src="/assets/sprites/home/dialogo-fauno-en-blanco.png"
+                      alt="Dialog bubble"
+                      fill
+                      sizes="260px"
+                      style={{ objectFit: 'fill', imageRendering: 'pixelated' }}
+                    />
+                  </div>
+                  <div className="fauno-dialog-content">
+                    <button
+                      className="fauno-dialog-close"
+                      onClick={() => closeDialog(false)}
+                      aria-label="Cerrar"
+                    >
+                      ×
                     </button>
-                  )}
+                    <p className="fauno-dialog-text">
+                      {typedText}
+                      {!textDone && <span className="fauno-cursor">▋</span>}
+                    </p>
+                    {textDone && (
+                      <button className="fauno-dialog-btn" onClick={() => closeDialog(true)}>
+                        <span className="fauno-dialog-play">▶</span>
+                        ESCUCHAR AHORA
+                        <span className="fauno-dialog-wave">▂▃▅▇▅▃▂</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Fauno character — permanent */}
-            <div className="fauno-character">
-              <Image
-                src="/assets/sprites/home/fauno.png"
-                alt="Fauno – Compositor"
-                width={130}
-                height={170}
-                style={{ imageRendering: 'pixelated', width: '130px', height: 'auto' }}
-              />
+              {/* Fauno character — permanent */}
+              <div className="fauno-character">
+                <Image
+                  src="/assets/sprites/home/fauno.png"
+                  alt="Fauno – Compositor"
+                  width={130}
+                  height={170}
+                  style={{ imageRendering: 'pixelated', width: '130px', height: 'auto' }}
+                />
+              </div>
             </div>
           </div>
 
